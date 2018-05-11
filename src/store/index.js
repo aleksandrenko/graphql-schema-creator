@@ -5,7 +5,81 @@ import getUID from '../utils/getUID';
 
 const thr = (errorText) => { throw new Error(errorText) };
 
+const GRAPHQL_LC = 'graphql-generator-ui-conf';
+
+class TodoStore {
+    @observable nodes = [];
+    @observable edges = [];
+    @observable selected = null; //selected entity node/edge
+
+    /**
+     *
+     * @param name
+     * @param x
+     * @param y
+     */
+    addNode({name, x, y}) {
+        const position = { x, y };
+        const newNode = new Node({name, position});
+        this.nodes.push(newNode);
+    }
+
+    /**
+     *
+     * @param name
+     * @param startNodeId
+     * @param endNodeId
+     */
+    addEdge({name, startNodeId, endNodeId}) {
+        const newEdge = new Edge({
+            name,
+            startNodeId,
+            endNodeId
+        });
+
+        const startNode = this.getNode(startNodeId);
+        const endNode = this.getNode(endNodeId);
+
+        startNode.addEdge(newEdge._id);
+        endNode.addEdge(newEdge._id);
+
+        this.edges.push(newEdge);
+    }
+
+    /**
+     *
+     * @param id
+     * @returns {*}
+     */
+    getNode(id) {
+        return this.nodes.find(node => node._id === id);
+    }
+
+    /**
+     *
+     * @param id
+     * @returns {*}
+     */
+    getEdge(id) {
+        return this.edges.find(edge => edge._id === id);
+    }
+
+    populateFromLocalStorage() {
+        const storage = window.localStorage;
+        const localStorageData = JSON.parse(storage.getItem(GRAPHQL_LC));
+        console.log('localStorageData', localStorageData);
+    }
+}
+
+const store = new TodoStore();
+store.populateFromLocalStorage();
+
 class Property {
+    /**
+     *
+     * @param name
+     * @param id
+     */
     constructor({name, id}) {
         this.name = name || thr('Name is required for new Property creation.');
         this.type = ''; //string, number, email ...
@@ -19,36 +93,64 @@ class Property {
     }
 }
 
+/**
+ *
+ */
 class Edge {
-    constructor({name, id, startNode, endNode}) {
-        (!startNode) && thr('Start node is required for new Edge creation.');
-        (!endNode) && thr('End node is required for new Edge creation.');
+    /**
+     *
+     * @param name
+     * @param id
+     * @param startNodeId
+     * @param endNodeId
+     */
+    constructor({name, id, startNodeId, endNodeId}) {
+        (!startNodeId) && thr('Start node id is required for new Edge creation.');
+        (!endNodeId) && thr('End node id is required for new Edge creation.');
 
         this.name = name || thr('Name is required for new Edge creation.');
         this.properties = [];
 
         this._id = id || getUID();
         this._type = 'edge';
-        this._startNode = startNode; //will point to an existing node object
-        this._endNode = endNode; //will point to an existing node object
+        this._startNodeId = startNodeId; //will point to an existing node object
+        this._endNodeId = endNodeId; //will point to an existing node object
     }
 
-    set startNode(startNode) {
-        this._startNode = startNode;
+    get _startNode() {
+        return store.getNode(this._startNodeId);
     }
 
-    set endNode(endNode) {
-        this._endNode = endNode;
+    get _endNode() {
+        return store.getNode(this._endNodeId);
+    }
+
+    set _startNode(startNode) {
+        this._startNodeId = startNode._id;
+    }
+
+    set _endNode(endNode) {
+        this._endNodeId = endNode._id;
     }
 }
 
+/**
+ *
+ */
 class Node {
+    /**
+     *
+     * @param name
+     * @param position
+     * @param color
+     * @param id
+     */
     constructor({name, position, color, id}) {
         (!position || position.x === undefined || position.y === undefined) && thr('Positions is required for new Node creation.');
 
         this.name = name || thr('Name is required for new Node creation.');
         this.properties = [];
-        this.edges = [];
+        this.edgeIds = [];
 
         this._id = id || getUID();
         this._type = 'node';
@@ -59,41 +161,49 @@ class Node {
         }
     }
 
+    /**
+     *
+     * @param x
+     * @param y
+     */
     set position({x, y}) {
         this._position = {
             x,
             y
         }
     }
-}
 
-class TodoStore {
-    @observable nodes = [];
-    @observable edges = [];
-    @observable selected = null; //selected entity node/edge
-
-    addNode({name, x, y}) {
-        const position = { x, y };
-        const newNode = new Node({name, position});
-        this.nodes.push(newNode);
+    /**
+     *
+     * @returns {any[]}
+     */
+    get edges() {
+        return this.edgeIds.map(edgeId => store.getEdge(edgeId));
     }
 
-    addEdge({name, startNodeId, endNodeId}) {
-        const startNode = this.nodes.find(node => node._id === startNodeId);
-        const endNode = this.nodes.find(node => node._id === endNodeId);
-
-        !name && thr('Name is missing when trying to create Edge.');
-        !startNode && thr('Start node is missing when trying to create Edge.');
-        !endNode && thr('End node is missing when trying to create Edge.');
-
-        const newEdge = new Edge({
-            name,
-            startNode,
-            endNode
-        });
-        this.edges.push(newEdge);
+    /**
+     *
+     * @param edgeId
+     */
+    addEdge(edgeId) {
+        this.edgeIds.push(edgeId);
     }
 }
 
-export default new TodoStore();
+/**
+ *
+ */
+window.onunload = () => {
+    console.log('onunload');
+    console.log('store', store);
+
+    const storage = window.localStorage;
+    storage.setItem(GRAPHQL_LC, JSON.stringify({
+        nodes: store.nodes,
+        edges: store.edges,
+        selected: store.selected
+    }));
+};
+
+export default store;
 

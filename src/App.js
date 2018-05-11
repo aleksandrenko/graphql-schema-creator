@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {observer} from 'mobx-react';
 
 import {Fabric} from 'office-ui-fabric-react/lib/Fabric';
-import {MessageBar, MessageBarType} from 'office-ui-fabric-react/lib/MessageBar';
 
 import {TextField} from 'office-ui-fabric-react/lib/TextField';
 import {DefaultButton} from 'office-ui-fabric-react/lib/Button';
@@ -85,7 +84,14 @@ class App extends Component {
                             <li onClick={ () => { this.setState({ selectedEntity: node }) }}>
                                 <input type="color" value={node._color} />
                                 {node.name} (x: {node._position.x}/y: {node._position.y})
-                                {node._id}
+
+                                <div>edges:
+                                {
+                                    node.edges.map(edge => {
+                                       return <span>{edge.name}&nbsp;</span>;
+                                    })
+                                }
+                                </div>
                             </li>
                         ))
                     }
