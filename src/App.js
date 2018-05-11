@@ -141,11 +141,84 @@ class App extends Component {
                         store.nodes.map(node => (
                             <li>
                                 <input type="color" value={node._color} />
-                                {node.name} ({node._position.x}/{node._position.y})
+                                {node.name} (x: {node._position.x}/y: {node._position.y})
+                                {node._id}
                             </li>
                         ))
                     }
                 </ul>
+
+                <hr/>
+
+                <div>
+                    <h1>Create Edge</h1>
+
+                    <Dropdown
+                        placeHolder='Select start Node ...'
+                        label='Start Node'
+                        id='edgeStart'
+                        options={
+                            store.nodes.map(node => {
+                              return { key: node._id, text: node.name }
+                            })
+                        }
+                        onChanged={ (option) => {
+                            this.setState({
+                                startNodeId: option.key
+                            });
+                        } }
+                    />
+
+                    <TextField label="name" onChanged={(val) => {
+                        this.setState({
+                            edgeName: val
+                        });
+
+                    }} /> string
+
+                    <Dropdown
+                        placeHolder='Select end Node ...'
+                        label='End Node'
+                        id='edgeEnd'
+                        options={
+                            store.nodes.map(node => {
+                                return { key: node._id, text: node.name }
+                            })
+                        }
+                        onChanged={ (option) => {
+                            this.setState({
+                                endNodeId: option.key
+                            });
+                        } }
+                    />
+
+                    <br/>
+
+                    <DefaultButton onClick={ () => {
+                            store.addEdge({
+                                name: this.state.edgeName,
+                                startNodeId: this.state.startNodeId,
+                                endNodeId: this.state.endNodeId
+                            })
+                        }
+                    }>
+                        Add edge
+                    </DefaultButton>
+
+                    <br/><br/>
+
+                    <ul>
+                        {
+                            store.edges.map(edge => (
+                                <li>
+                                    <b>(</b>{ edge._startNode.name }<b>)-[</b>{ edge.name }<b>]->(</b>{ edge._endNode.name }<b>)</b>
+                                </li>
+                            ))
+                        }
+                    </ul>
+
+                    <br/>
+                </div>
             </Fabric>
         );
     }

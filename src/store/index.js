@@ -22,7 +22,7 @@ class Property {
 class Edge {
     constructor({name, id, startNode, endNode}) {
         (!startNode) && thr('Start node is required for new Edge creation.');
-        (!endNode) && thr('Start node is required for new Edge creation.');
+        (!endNode) && thr('End node is required for new Edge creation.');
 
         this.name = name || thr('Name is required for new Edge creation.');
         this.properties = [];
@@ -72,44 +72,26 @@ class TodoStore {
     @observable edges = [];
     @observable selected = null; //selected entity node/edge
 
-    @observable todos = [
-        {
-            task: 'Hardcoded task 1',
-            completed: false,
-            assignee: null
-        },
-        {
-            task: 'Hardcoded task 2',
-            completed: false,
-            assignee: null
-        }
-    ];
-
     addNode({name, x, y}) {
         const position = { x, y };
         const newNode = new Node({name, position});
         this.nodes.push(newNode);
     }
 
-    get completedTodosCount() {
-        return this.todos.filter(
-            todo => todo.completed === true
-        ).length;
-    }
+    addEdge({name, startNodeId, endNodeId}) {
+        const startNode = this.nodes.find(node => node._id === startNodeId);
+        const endNode = this.nodes.find(node => node._id === endNodeId);
 
-    report() {
-        if (this.todos.length === 0)
-            return "<none>";
-        return `Next todo: "${this.todos[0].task}". ` +
-            `Progress: ${this.completedTodosCount}/${this.todos.length}`;
-    }
+        !name && thr('Name is missing when trying to create Edge.');
+        !startNode && thr('Start node is missing when trying to create Edge.');
+        !endNode && thr('End node is missing when trying to create Edge.');
 
-    addTodo(task) {
-        this.todos.push({
-            task: task,
-            completed: false,
-            assignee: null
+        const newEdge = new Edge({
+            name,
+            startNode,
+            endNode
         });
+        this.edges.push(newEdge);
     }
 }
 
