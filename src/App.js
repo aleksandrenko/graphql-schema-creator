@@ -5,7 +5,7 @@ import {Fabric} from 'office-ui-fabric-react/lib/Fabric';
 import {MessageBar, MessageBarType} from 'office-ui-fabric-react/lib/MessageBar';
 
 import {TextField} from 'office-ui-fabric-react/lib/TextField';
-import {DefaultButton} from 'office-ui-fabric-react/lib/Button';
+import {DefaultButton, IconButton} from 'office-ui-fabric-react/lib/Button';
 
 import { Dropdown } from 'office-ui-fabric-react/lib/Dropdown';
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle';
@@ -44,8 +44,20 @@ class App extends Component {
                     <br/>
                     props:
                     <ul>
-                        <li><TextField label="id"/> id! [delete btn]</li>
-                        <li><TextField label="name"/> string [delete btn]</li>
+                        <li>
+                            <TextField label="id"/> id!
+                            <IconButton
+                                iconProps={ { iconName: 'Delete' } }
+                                title='Delete'
+                            />
+                        </li>
+                        <li>
+                            <TextField label="name"/> string
+                            <IconButton
+                                iconProps={ { iconName: 'Delete' } }
+                                title='Delete'
+                            />
+                        </li>
                     </ul>
 
                     <DefaultButton>Update</DefaultButton>
