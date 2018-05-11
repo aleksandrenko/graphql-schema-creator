@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
 
-import {MessageBar, MessageBarType} from 'office-ui-fabric-react/lib/MessageBar';
-
 import {TextField} from 'office-ui-fabric-react/lib/TextField';
 import {DefaultButton, IconButton} from 'office-ui-fabric-react/lib/Button';
 
@@ -10,21 +8,16 @@ import { Toggle } from 'office-ui-fabric-react/lib/Toggle';
 
 class EntityEdit extends Component {
     render() {
+        const entity = this.props.entity;
+
         return (this.props.entity &&
             <div className="form">
-                <MessageBar messageBarType={MessageBarType.info}>
-                    <strong>Grapqhl schema creation</strong>
-                    <p>Create your graphql schema in a visual, easy to comprehend way. Lorem lipsum ;)?</p>
-                </MessageBar>
+                <TextField label="Name" value={entity.name} />
+                <div>({entity._type})</div>
 
-                <TextField label="Name"/> (type: Node/Edge)
+                <DefaultButton primary={true}>Add property</DefaultButton>
 
-                <br/>
-
-                <DefaultButton>Add property</DefaultButton>
-
-                <br/>
-                props:
+                <hr/>
                 <ul>
                     <li>
                         <TextField label="id"/> id!

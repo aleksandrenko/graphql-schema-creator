@@ -37,8 +37,8 @@ class TodoStore {
             endNodeId
         });
 
-        const startNode = this.getNode(startNodeId);
-        const endNode = this.getNode(endNodeId);
+        const startNode = this.getById(startNodeId);
+        const endNode = this.getById(endNodeId);
 
         startNode.addEdge(newEdge._id);
         endNode.addEdge(newEdge._id);
@@ -51,17 +51,9 @@ class TodoStore {
      * @param id
      * @returns {*}
      */
-    getNode(id) {
-        return this.nodes.find(node => node._id === id);
-    }
-
-    /**
-     *
-     * @param id
-     * @returns {*}
-     */
-    getEdge(id) {
-        return this.edges.find(edge => edge._id === id);
+    getById(id) {
+        return this.nodes.find(node => node._id === id)
+            || this.edges.find(edge => edge._id === id);
     }
 
     populateFromLocalStorage() {
@@ -118,11 +110,11 @@ class Edge {
     }
 
     get _startNode() {
-        return store.getNode(this._startNodeId);
+        return store.getById(this._startNodeId);
     }
 
     get _endNode() {
-        return store.getNode(this._endNodeId);
+        return store.getById(this._endNodeId);
     }
 
     set _startNode(startNode) {
@@ -178,7 +170,7 @@ class Node {
      * @returns {any[]}
      */
     get edges() {
-        return this.edgeIds.map(edgeId => store.getEdge(edgeId));
+        return this.edgeIds.map(edgeId => store.getById(edgeId));
     }
 
     /**
