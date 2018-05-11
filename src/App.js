@@ -48,6 +48,14 @@ class App extends Component {
                     <p>Create your graphql schema in a visual, easy to comprehend way. Lorem lipsum ;)?</p>
                 </MessageBar>
 
+                <div>
+                    Selected Entity:&nbsp;
+                    <b>
+                        { this.state.selectedEntity && this.state.selectedEntity.name }
+                        ({ this.state.selectedEntity && this.state.selectedEntity._type})
+                    </b>
+                </div>
+
                 <div className="form">
                     <TextField label="Name"/> (type: Node/Edge)
 
@@ -139,7 +147,7 @@ class App extends Component {
                 <ul>
                     {
                         store.nodes.map(node => (
-                            <li>
+                            <li onClick={ () => { this.setState({ selectedEntity: node }) }}>
                                 <input type="color" value={node._color} />
                                 {node.name} (x: {node._position.x}/y: {node._position.y})
                                 {node._id}
@@ -210,7 +218,7 @@ class App extends Component {
                     <ul>
                         {
                             store.edges.map(edge => (
-                                <li>
+                                <li onClick={ () => { this.setState({ selectedEntity: edge }) }}>
                                     <b>(</b>{ edge._startNode.name }<b>)-[</b>{ edge.name }<b>]->(</b>{ edge._endNode.name }<b>)</b>
                                 </li>
                             ))
