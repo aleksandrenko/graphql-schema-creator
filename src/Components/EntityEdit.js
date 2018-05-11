@@ -3,82 +3,58 @@ import React, {Component} from 'react';
 import {TextField} from 'office-ui-fabric-react/lib/TextField';
 import {DefaultButton, IconButton} from 'office-ui-fabric-react/lib/Button';
 
-import { Dropdown } from 'office-ui-fabric-react/lib/Dropdown';
-import { Toggle } from 'office-ui-fabric-react/lib/Toggle';
+import Property from "./Property";
+import {observer} from 'mobx-react';
 
+import store from '../store/';
+
+@observer
 class EntityEdit extends Component {
-    render() {
-        const entity = this.props.entity;
+    constructor(props) {
+        super(props);
 
-        return (this.props.entity &&
+        this.state = {
+            selectedProperty: null
+        }
+    }
+
+    onPropertyDeleteClick = () => {
+        console.log('delete prop', store.selected);
+    };
+
+    onAddNewProperty = () => {
+        store.selected.addProperty();
+    };
+
+    render() {
+        const entity = store.selected;
+
+        return (entity &&
             <div className="form">
                 <TextField label="Name" value={entity.name} />
-                <div>({entity._type})</div>
+                <div>({entity.type})</div>
 
-                <DefaultButton primary={true}>Add property</DefaultButton>
+                <DefaultButton primary={true} onClick={ this.onAddNewProperty }>Add property</DefaultButton>
 
                 <hr/>
                 <ul>
-                    <li>
-                        <TextField label="id"/> id!
-                        <IconButton
-                            iconProps={ { iconName: 'Delete' } }
-                            title='Delete'
-                        />
-                    </li>
-                    <li>
-                        <TextField label="name"/> string
-                        <IconButton
-                            iconProps={ { iconName: 'Delete' } }
-                            title='Delete'
-                        />
-                    </li>
+                    {
+                        entity.properties.map(prop => (
+                            <li>
+                                <span onClick={ () => { this.setState({ selectedProperty: prop }) } }>{prop.name}</span>
+                                <IconButton
+                                    iconProps={ { iconName: 'Delete' } }
+                                    title='Delete'
+                                    onClick={ this.onPropertyDeleteClick }
+                                />
+                            </li>
+                        ))
+                    }
                 </ul>
 
-                <DefaultButton>Update</DefaultButton>
-
-                <ul>
-                    <li>
-                        Type:
-                        <Dropdown
-                            placeHolder='Select an Option'
-                            label='Basic uncontrolled example:'
-                            id='Basicdrop1'
-                            ariaLabel='Basic dropdown example'
-                            options={
-                                [
-                                    { key: 'string', text: 'String' },
-                                    { key: 'number', text: 'Number' }
-                                ]
-                            }
-                        />
-                    </li>
-                    <li>
-                        Required:
-                        <Toggle
-                            defaultChecked={ false }
-                            onText='Yes'
-                            offText='No'
-                        />
-                    </li>
-                    <li>
-                        Auto Gen.:
-                        <Toggle
-                            defaultChecked={ false }
-                            onText='Yes'
-                            offText='No'
-                        />
-                    </li>
-                    <li>
-                        Min Len.: <TextField/>
-                    </li>
-                    <li>
-                        Max Len.: <TextField/>
-                    </li>
-                    <li>
-                        Description: <TextField/>
-                    </li>
-                </ul>
+                { this.state.selectedProperty &&
+                    <Property data={this.state.selectedProperty} />
+                }
 
             </div>
         )

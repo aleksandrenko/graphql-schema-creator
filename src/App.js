@@ -8,7 +8,7 @@ import {DefaultButton} from 'office-ui-fabric-react/lib/Button';
 
 import { Dropdown } from 'office-ui-fabric-react/lib/Dropdown';
 
-import EntityEdit from './Components/EntityEdit';
+import EditEntity from './Components/EntityEdit';
 
 import store from './store/';
 import {initializeIcons} from '@uifabric/icons';
@@ -43,16 +43,16 @@ class App extends Component {
     render() {
         return (
             <Fabric className="app">
-                { this.state.selectedEntity &&
+                { store.selected &&
                     <div>
                         Selected Entity:&nbsp;
                         <b>
-                            { this.state.selectedEntity.name }
-                            ({ this.state.selectedEntity._type})
+                            { store.selected.name }
+                            ({ store.selected.type})
                         </b>
 
                         &nbsp;&nbsp;
-                        <button onClick={() => { this.setState({ selectedEntity: null }) }}>
+                        <button onClick={() => { store.selected = null }}>
                             Deselect
                         </button>
                     </div>
@@ -62,7 +62,7 @@ class App extends Component {
                 <hr/>
                 <br/>
 
-                <EntityEdit entity={this.state.selectedEntity} />
+                <EditEntity />
 
                 <input type="text" onChange={(e) => this.setState({inputValue: e.target.value})} />
                 <button onClick={() => {
@@ -81,9 +81,9 @@ class App extends Component {
                 <ul>
                     {
                         store.nodes.map(node => (
-                            <li onClick={ () => { this.setState({ selectedEntity: node }) }}>
-                                <input type="color" value={node._color} />
-                                {node.name} (x: {node._position.x}/y: {node._position.y})
+                            <li onClick={ () => { store.selected = node; }}>
+                                <input type="color" value={node.color} />
+                                {node.name} (x: {node.position.x}/y: {node.position.y})
 
                                 <div>edges:
                                 {
@@ -108,7 +108,7 @@ class App extends Component {
                         id='edgeStart'
                         options={
                             store.nodes.map(node => {
-                              return { key: node._id, text: node.name }
+                              return { key: node.id, text: node.name }
                             })
                         }
                         onChanged={ (option) => {
@@ -131,7 +131,7 @@ class App extends Component {
                         id='edgeEnd'
                         options={
                             store.nodes.map(node => {
-                                return { key: node._id, text: node.name }
+                                return { key: node.id, text: node.name }
                             })
                         }
                         onChanged={ (option) => {
@@ -159,8 +159,8 @@ class App extends Component {
                     <ul>
                         {
                             store.edges.map(edge => (
-                                <li onClick={ () => { this.setState({ selectedEntity: edge }) }}>
-                                    <b>(</b>{ edge._startNode.name }<b>)-[</b>{ edge.name }<b>]->(</b>{ edge._endNode.name }<b>)</b>
+                                <li onClick={ () => { store.selected = edge; }}>
+                                    <b>(</b>{ edge.startNode.name }<b>)-[</b>{ edge.name }<b>]->(</b>{ edge.endNode.name }<b>)</b>
                                 </li>
                             ))
                         }
