@@ -26,6 +26,20 @@ class App extends Component {
         }
     }
 
+    componentDidMount() {
+        store.addNode({
+            name: 'New node, hardocded',
+            x: 100,
+            y: 100
+        });
+
+        store.addNode({
+            name: 'Second New node, hardocded',
+            x: 300,
+            y: 100
+        });
+    }
+
     render() {
         return (
             <Fabric className="app">
@@ -108,17 +122,29 @@ class App extends Component {
                 </div>
 
 
-                <input type="text" onChange={(e) => this.setState({inputValue: e.target.value})}/>
+                <input type="text" onChange={(e) => this.setState({inputValue: e.target.value})} />
                 <button onClick={() => {
-                    store.addTodo(this.state.inputValue)
-                }}>Add todo
+                    store.addNode({
+                        name: this.state.inputValue || 'No name',
+                        x: parseInt(Math.random() * 900),
+                        y: parseInt(Math.random() * 900)
+                    });
+                }}>
+                    Add node
                 </button>
+
                 <br/>val: {this.state.inputValue}
                 <br/>
+
                 <ul>
-                    {store.todos.map(todo => {
-                        return <li>{todo.task}</li>
-                    })}
+                    {
+                        store.nodes.map(node => (
+                            <li>
+                                <input type="color" value={node._color} />
+                                {node.name} ({node._position.x}/{node._position.y})
+                            </li>
+                        ))
+                    }
                 </ul>
             </Fabric>
         );

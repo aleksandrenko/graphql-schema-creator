@@ -37,14 +37,14 @@ class Edge {
         this._startNode = startNode;
     }
 
-    set endNode(startNode) {
+    set endNode(endNode) {
         this._endNode = endNode;
     }
 }
 
 class Node {
     constructor({name, position, color, id}) {
-        (!position || position.x === undefined || !position.y === undefined) && thr('Positions is required for new Node creation.');
+        (!position || position.x === undefined || position.y === undefined) && thr('Positions is required for new Node creation.');
 
         this.name = name || thr('Name is required for new Node creation.');
         this.properties = [];
@@ -84,6 +84,12 @@ class TodoStore {
             assignee: null
         }
     ];
+
+    addNode({name, x, y}) {
+        const position = { x, y };
+        const newNode = new Node({name, position});
+        this.nodes.push(newNode);
+    }
 
     get completedTodosCount() {
         return this.todos.filter(
