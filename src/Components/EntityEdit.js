@@ -31,7 +31,7 @@ class EntityEdit extends Component {
 
         return (entity &&
             <div className="form">
-                <TextField label="Name" value={entity.name} />
+                <TextField label="Name" value={entity.name} onChanged={ (val) => entity.name = val } />
                 <div>({entity.type})</div>
 
                 <DefaultButton primary={true} onClick={ this.onAddNewProperty }>Add property</DefaultButton>

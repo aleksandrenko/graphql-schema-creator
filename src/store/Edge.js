@@ -1,21 +1,18 @@
-import store from "./index";
-
 import geometry from '../utils/geometry';
 import getUID from "../utils/id";
 import Property from "./Property";
-import {observable} from "mobx/lib/mobx";
 
+import store from '../store/';
 const thr = (errorText) => { throw new Error(errorText) };
 
 /**
  *
  */
 class Edge {
-    @observable properties = [];
-
     constructor(options = {}) {
         this.name = options.name || thr('Name is required for new Edge creation.');
         this.id = options.id || getUID();
+        this.properties = options.properties || [];
         this.type = 'edge';
         this.middlePointOffset = options.middlePointOffset || [0, 0];
         this.startNodeId = options.startNodeId || thr('StartNodeId is required for new Edge creation.');

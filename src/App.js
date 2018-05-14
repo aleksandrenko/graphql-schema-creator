@@ -10,7 +10,6 @@ import { Dropdown } from 'office-ui-fabric-react/lib/Dropdown';
 
 import EditEntity from './Components/EntityEdit';
 
-import store from './store/';
 import {initializeIcons} from '@uifabric/icons';
 
 initializeIcons();
@@ -27,13 +26,13 @@ class App extends Component {
     }
 
     componentDidMount() {
-        store.addNode({
+        this.props.store.addNode({
             name: 'New node, hardocded',
             x: 100,
             y: 100
         });
 
-        store.addNode({
+        this.props.store.addNode({
             name: 'Second New node, hardocded',
             x: 300,
             y: 100
@@ -41,6 +40,8 @@ class App extends Component {
     }
 
     render() {
+        const store = this.props.store;
+
         return (
             <Fabric className="app">
                 { store.selected &&
@@ -62,7 +63,7 @@ class App extends Component {
                 <hr/>
                 <br/>
 
-                <EditEntity />
+                <EditEntity entity={store.selected} />
 
                 <input type="text" onChange={(e) => this.setState({inputValue: e.target.value})} />
                 <button onClick={() => {
@@ -81,8 +82,8 @@ class App extends Component {
                 <ul>
                     {
                         store.nodes.map(node => (
-                            <li onClick={ () => { store.selected = node; }}>
-                                <input type="color" value={node.color} />
+                            <li key={node.id} onClick={ () => { store.selected = node; }}>
+                                <input type="color" value={node.color} onChange={ (e) => { node.color = e.target.value; } } />
                                 {node.name} (x: {node.position.x}/y: {node.position.y})
 
                                 <div>edges:

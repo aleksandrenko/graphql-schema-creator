@@ -1,22 +1,24 @@
-import store from "./index";
-
 import getUID from "../utils/id";
 import getColor from "../utils/color";
 import Property from "./Property";
+import store from '../store/';
+
 import { observable } from 'mobx';
 
 const thr = (errorText) => { throw new Error(errorText) };
-
 
 /**
  *
  */
 class Node {
-    @observable properties = [];
+    @observable properties;
+    @observable name;
+    @observable color;
 
     constructor(options = {}) {
         this.name = options.name || thr('Name is required for new Node creation.');
         this.edgeIds = options.edgeIds || [];
+        this.properties = options.properties || [];
         this.id = options.id || getUID();
         this.type = 'node';
         this.color = options.color || getColor();
