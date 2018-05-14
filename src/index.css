@@ -27,4 +27,6 @@ body {
 
 .graph-ui-svg .node text {
   transform: translate(20px, 5px);
+  white-space: nowrap;
+  text-transform: capitalize;
 }

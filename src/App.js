@@ -47,8 +47,6 @@ class App extends Component {
                 }
 
                 <br/>
-                <br/>
-                <br/>
 
                 <GraphUI store={store} />
 

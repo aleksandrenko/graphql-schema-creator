@@ -3,40 +3,39 @@ import {observer} from "mobx-react";
 
 @observer
 class GraphUI extends Component {
-
-    constructor(props) {
-        super(props);
-    }
-
     onMouseDown = (e) => {
-        const target = e.target.parentElement;
-        const targetIsNode = target.classList.contains('node');
-
-        if (targetIsNode) {
-            const uuid = target.getAttribute('uuid');
-            this.svg.addEventListener('mousemove', this.onMouseMove.bind(this, {
-                uuid,
-                x: e.clientX,
-                y: e.clientY
-            }));
-        }
+        this.onMouseMove.clickTarget = e.target;
+        this.svg.addEventListener('mousemove', this.onMouseMove);
     };
 
-    releaseSelected = (e) => {
-        this.props.store.selected = null;
+    onMouseUp = () => {
+        this.onMouseMove.clickTarget = null;
         this.svg.removeEventListener('mousemove', this.onMouseMove);
     };
 
-    onMouseMove = (options, e) => {
-        console.log(e);
+    onMouseMove = (e) => {
+        const target = this.onMouseMove.clickTarget;
 
+        const targetIsNode = target.parentElement.classList.contains('node');
+
+        if (targetIsNode) {
+            this.onNodeMove(e, target.parentElement.getAttribute('uuid'));
+        }
+    };
+
+    onNodeMove = (e, uuid) => {
         this.props.store.changeEntityPosition({
-            id: options.uuid,
+            id: uuid,
             position: {
-                x: options.x - e.clientX,
-                y: options.y - e.clientY
+                x: e.offsetX,
+                y: e.offsetY
             }
         });
+    };
+
+    showContext = (e) => {
+        console.log('show context');
+        e.preventDefault();
     };
 
     render() {
@@ -46,38 +45,60 @@ class GraphUI extends Component {
             <div className="graph-ui">
                 <svg
                     className="graph-ui-svg"
-                    width="840" height="240"
-                    viewBox="0 0 240 240"
+                    height="100%"
+                    width="100%"
                     ref={svg => this.svg = svg}
-                    onMouseUp={this.releaseSelected}
-                    onMouseLeave={this.releaseSelected}
-                    onContextMenu={e => e.preventDefault()}
+                    onMouseUp={this.onMouseUp}
                     onMouseDown={this.onMouseDown}
+                    onMouseLeave={this.onMouseUp}
+                    onContextMenu={this.showContext}
                 >
+                    <defs>
+                        <marker
+                            id="mark-end-arrow"
+                            viewBox="0 -5 10 10"
+                            refX="7"
+                            markerWidth="6"
+                            markerHeight="6"
+                            orient="auto"
+                        >
+                            <path d="M0,-5L10,0L0,5" />
+                        </marker>
+                    </defs>
 
-                    {
-                        store.nodes.map(node => (
-                            <g
-                                className="node second"
+                    <g className="entities">
+                        <g className="tempPaths">
+                            <path
+                                className="dragLine hidden"
+                                d="M0,0L0,0"
+                                style={{"marker-end": "url(&quot;#mark-end-arrow&quot;);"}}
+                            />
+                        </g>
 
-                                key={node.id}
-                                uuid={node.id}
-                            >
-                                <circle
-                                    r="13"
-                                    stroke={node.color}
-                                    fill="transparent"
-                                    cx={node.position.x}
-                                    cy={node.position.y}
-                                />
-                                <text
-                                    fill={node.color}
-                                    opacity="1">
-                                        {node.name}
-                                </text>
-                            </g>
-                        ))
-                    }
+                        <g className="nodes">
+                        {
+                            store.nodes.map(node => (
+                                <g
+                                    className="node"
+                                    transform={`translate(${node.position.x},${node.position.y})`}
+                                    key={node.id}
+                                    uuid={node.id}
+                                >
+                                    <circle
+                                        r="13"
+                                        stroke={node.color}
+                                        fill="transparent"
+                                    />
+                                    <text fill={node.color}>
+                                            {node.name} ({node.properties.length})
+                                    </text>
+                                </g>
+                            ))
+                        }
+                        </g>
+
+                        <g className="edges"></g>
+                    </g>
                 </svg>
             </div>
         );
