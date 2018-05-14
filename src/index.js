@@ -2,7 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
+import ErrorBoundary from './Components/ErrorBoundary';
 
 import store from './store/';
 
-ReactDOM.render(<App store={store} />, document.getElementById('root'));
+const Application = (
+    <ErrorBoundary>
+        <App store={store} />
+    </ErrorBoundary>
+);
+
+ReactDOM.render(Application, document.getElementById('root'));

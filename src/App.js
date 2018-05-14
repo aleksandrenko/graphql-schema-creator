@@ -66,7 +66,7 @@ class App extends Component {
                 <br/>
 
                 <ul>
-                    {
+                    { store &&
                         store.nodes.map(node => (
                             <li key={node.id}>
                                 <input type="color" value={node.color} onChange={ (e) => { node.color = e.target.value; } } />
@@ -83,9 +83,11 @@ class App extends Component {
 
                                 <div>edges:
                                 {
-                                    node.edges.map(edge => {
-                                       return <span>{edge.name}&nbsp;</span>;
-                                    })
+                                    node.edges
+                                        .filter(edge => !!edge)
+                                        .map(edge => (
+                                            <span key={edge.id}>{edge.name}</span>
+                                        ))
                                 }
                                 </div>
                             </li>

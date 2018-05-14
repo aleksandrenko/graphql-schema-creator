@@ -60,25 +60,28 @@ const store = {
     },
 
     populateFromLocalStorage(localStorageData) {
+        localStorageData.nodes &&
         localStorageData.nodes.forEach(nodeData => {
             this.addNode(nodeData);
         });
 
+        localStorageData.edges &&
         localStorageData.edges.forEach(edgeData => {
             this.addEdge(edgeData);
         });
 
+        localStorageData.selectedId && (
         this.selected = {
             id: localStorageData.selectedId
-        };
+        });
 
         console.log('localStorageData', localStorageData);
-        console.log(this);
+        console.log('storage', this);
     }
 };
 
-
-const localStorageData = JSON.parse(window.localStorage.getItem(GRAPHQL_LC) || '');
+const loString = window.localStorage.getItem(GRAPHQL_LC);
+const localStorageData = JSON.parse(loString || '{}');
 store.populateFromLocalStorage(localStorageData);
 
 autorun(() => {
@@ -89,6 +92,8 @@ autorun(() => {
         edges: store.edges,
         selectedId: store.selectedId
     }));
-});
+
+
+}, { delay: 200 });
 
 export default store;
