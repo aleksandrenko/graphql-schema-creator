@@ -1,4 +1,4 @@
-import { observable } from 'mobx';
+import { observable, autorun, computed } from 'mobx';
 
 import Edge from './Edge';
 import Node from './Node';
@@ -8,12 +8,23 @@ const GRAPHQL_LC = 'graphql-generator-ui-conf';
 const store = {
     @observable nodes: [],
     @observable edges: [],
-    @observable selected: null, //selected entity node/edge
+    @observable selectedId: null, //selected entity node/edge
 
-    addNode({name, x, y}) {
-        const position = { x, y };
-        const newNode = new Node({name, position});
+    set selected (entity) {
+        this.selectedId = entity ? entity.id : null;
+    },
 
+    @computed get selected () {
+        return this.getById(this.selectedId) || null;
+    },
+
+    addNode(options = {}) {
+        const position = {
+            x: options.x,
+            y: options.y
+        };
+
+        const newNode = new Node({...options, options});
         this.nodes.push(newNode);
     },
 
@@ -33,32 +44,51 @@ const store = {
         this.edges.push(newEdge);
     },
 
+    deleteEntity(entity) {
+        if (entity.type === 'node') {
+            this.nodes.remove(entity);
+        }
+
+        if (entity.type === 'edge') {
+            this.edges.remove(entity);
+        }
+    },
+
     getById(id) {
         return this.nodes.find(node => node.id === id)
             || this.edges.find(edge => edge.id === id);
     },
 
-    populateFromLocalStorage() {
-        const storage = window.localStorage;
-        const localStorageData = JSON.parse(storage.getItem(GRAPHQL_LC));
+    populateFromLocalStorage(localStorageData) {
+        localStorageData.nodes.forEach(nodeData => {
+            this.addNode(nodeData);
+        });
+
+        localStorageData.edges.forEach(edgeData => {
+            this.addEdge(edgeData);
+        });
+
+        this.selected = {
+            id: localStorageData.selectedId
+        };
+
         console.log('localStorageData', localStorageData);
+        console.log(this);
     }
 };
 
-store.populateFromLocalStorage();
 
-/**
- *
- */
-window.onunload = () => {
-    console.log('store', store);
+const localStorageData = JSON.parse(window.localStorage.getItem(GRAPHQL_LC) || '');
+store.populateFromLocalStorage(localStorageData);
 
+autorun(() => {
     const storage = window.localStorage;
+
     storage.setItem(GRAPHQL_LC, JSON.stringify({
         nodes: store.nodes,
         edges: store.edges,
-        selected: store.selected
+        selectedId: store.selectedId
     }));
-};
+});
 
 export default store;

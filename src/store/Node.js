@@ -14,6 +14,7 @@ class Node {
     @observable properties;
     @observable name;
     @observable color;
+    @observable position;
 
     constructor(options = {}) {
         this.name = options.name || thr('Name is required for new Node creation.');
@@ -31,6 +32,10 @@ class Node {
 
     addEdge(edgeId) {
         this.edgeIds.push(edgeId);
+    }
+
+    deleteProperty(prop) {
+        this.properties.remove(prop);
     }
 
     addProperty() {

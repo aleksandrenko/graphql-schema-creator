@@ -2,6 +2,7 @@ import geometry from '../utils/geometry';
 import getUID from "../utils/id";
 import Property from "./Property";
 
+import { observable } from 'mobx';
 import store from '../store/';
 const thr = (errorText) => { throw new Error(errorText) };
 
@@ -9,6 +10,9 @@ const thr = (errorText) => { throw new Error(errorText) };
  *
  */
 class Edge {
+    @observable name;
+    @observable properties;
+
     constructor(options = {}) {
         this.name = options.name || thr('Name is required for new Edge creation.');
         this.id = options.id || getUID();
@@ -21,6 +25,10 @@ class Edge {
 
     addProperty() {
         this.properties.push(new Property());
+    }
+
+    deleteProperty(prop) {
+        this.properties.remove(prop);
     }
 
     get middlePoint() {

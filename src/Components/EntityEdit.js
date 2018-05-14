@@ -18,8 +18,8 @@ class EntityEdit extends Component {
         }
     }
 
-    onPropertyDeleteClick = () => {
-        console.log('delete prop', store.selected);
+    onPropertyDeleteClick = (prop) => {
+        store.selected.deleteProperty(prop);
     };
 
     onAddNewProperty = () => {
@@ -40,12 +40,12 @@ class EntityEdit extends Component {
                 <ul>
                     {
                         entity.properties.map(prop => (
-                            <li>
+                            <li key={prop.id}>
                                 <span onClick={ () => { this.setState({ selectedProperty: prop }) } }>{prop.name}</span>
                                 <IconButton
                                     iconProps={ { iconName: 'Delete' } }
                                     title='Delete'
-                                    onClick={ this.onPropertyDeleteClick }
+                                    onClick={ this.onPropertyDeleteClick.bind(this, prop) }
                                 />
                             </li>
                         ))

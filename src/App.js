@@ -4,7 +4,7 @@ import {observer} from 'mobx-react';
 import {Fabric} from 'office-ui-fabric-react/lib/Fabric';
 
 import {TextField} from 'office-ui-fabric-react/lib/TextField';
-import {DefaultButton} from 'office-ui-fabric-react/lib/Button';
+import {DefaultButton, IconButton} from 'office-ui-fabric-react/lib/Button';
 
 import { Dropdown } from 'office-ui-fabric-react/lib/Dropdown';
 
@@ -23,20 +23,6 @@ class App extends Component {
         this.state = {
             inputValue: ''
         }
-    }
-
-    componentDidMount() {
-        this.props.store.addNode({
-            name: 'New node, hardocded',
-            x: 100,
-            y: 100
-        });
-
-        this.props.store.addNode({
-            name: 'Second New node, hardocded',
-            x: 300,
-            y: 100
-        });
     }
 
     render() {
@@ -60,7 +46,7 @@ class App extends Component {
                 }
 
                 <br/>
-                <hr/>
+                <br/>
                 <br/>
 
                 <EditEntity entity={store.selected} />
@@ -82,9 +68,18 @@ class App extends Component {
                 <ul>
                     {
                         store.nodes.map(node => (
-                            <li key={node.id} onClick={ () => { store.selected = node; }}>
+                            <li key={node.id}>
                                 <input type="color" value={node.color} onChange={ (e) => { node.color = e.target.value; } } />
-                                {node.name} (x: {node.position.x}/y: {node.position.y})
+
+                                <button onClick={ () => { store.selected = node; }}>
+                                    {node.name} (x: {node.position.x}/y: {node.position.y})
+                                </button>
+
+                                <IconButton
+                                    iconProps={ { iconName: 'Delete' } }
+                                    title='Delete'
+                                    onClick={ () => { store.deleteEntity(node); } }
+                                />
 
                                 <div>edges:
                                 {
