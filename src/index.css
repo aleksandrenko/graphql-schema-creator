@@ -15,3 +15,11 @@ body {
 .ms-Fabric {
   padding: 20px;
 }
+
+svg {
+  background: ghostwhite;
+}
+
+svg > circle.selected {
+    
+}

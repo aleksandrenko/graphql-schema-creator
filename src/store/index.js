@@ -78,6 +78,27 @@ class TodoStore {
         this.nodes.push(newNode);
     }
 
+    moveSelected(dx, dy) {
+        // this.selected._position.x = this.selected._position.x + dx;
+        // this.selected._position.y = this.selected._position.x + dy;
+        this.nodes = this.nodes.map(node => {
+            if (node._id === this.selected._id) {
+                node._position.x = node._position.x - dx;
+                node._position.y = node._position.y - dy;
+            }
+            return node;
+        });
+    }
+
+    selectNode(nodeId) {
+        this.selected = this.nodes.find(node => node._id === nodeId);
+        debugger;
+    }
+
+    deselectNode() {
+        this.selected = null;
+    }
+
     addEdge({name, startNodeId, endNodeId}) {
         const startNode = this.nodes.find(node => node._id === startNodeId);
         const endNode = this.nodes.find(node => node._id === endNodeId);

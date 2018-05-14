@@ -3,11 +3,11 @@ import {observer} from 'mobx-react';
 
 import {Fabric} from 'office-ui-fabric-react/lib/Fabric';
 import {MessageBar, MessageBarType} from 'office-ui-fabric-react/lib/MessageBar';
-
-import {TextField} from 'office-ui-fabric-react/lib/TextField';
+import {ContextualMenuItemType , ContextualMenu } from 'office-ui-fabric-react/lib/ContextualMenu';
 import {DefaultButton} from 'office-ui-fabric-react/lib/Button';
+import {TextField} from 'office-ui-fabric-react/lib/TextField';
 
-import { Dropdown } from 'office-ui-fabric-react/lib/Dropdown';
+import {Dropdown} from 'office-ui-fabric-react/lib/Dropdown';
 
 import EntityEdit from './Components/EntityEdit';
 
@@ -25,6 +25,11 @@ class App extends Component {
         this.state = {
             inputValue: ''
         }
+
+        this.lastPosition = {
+            x: 0,
+            y: 0
+        }
     }
 
     componentDidMount() {
@@ -41,9 +46,37 @@ class App extends Component {
         });
     }
 
+    onMouseDown = (id) => (e) => {
+        this.lastPosition.x = e.clientX;
+        this.lastPosition.y = e.clientY;
+
+        store.selectNode(id);
+        this.svg.addEventListener('mousemove', this.onMouseMove);
+    }
+
+    releaseSelected = (e) => {
+        store.deselectNode();
+        this.svg.removeEventListener('mousemove', this.onMouseMove);
+    }
+
+    onMouseMove = (e) => {
+        store.moveSelected(this.lastPosition.x - e.clientX, this.lastPosition.y - e.clientY);
+        this.lastPosition.x = e.clientX;
+        this.lastPosition.y = e.clientY;
+    }
+
     render() {
         return (
             <Fabric className="app">
+            <ContextualMenu target={`.${store.nodes[0] && store.nodes[0]._id}`}>
+            test</ContextualMenu>
+            <svg width="840" height="240" viewBox="0 0 240 240" ref={svg => this.svg = svg}
+                onMouseUp={this.releaseSelected} onMouseLeave={this.releaseSelected} color="ghostwhite" onContextMenu={e => e.preventDefault()}>
+            {store.nodes.map(node => (
+                <circle className={node._id} style={{cursor: 'pointer'}} key={node._id} onMouseDown={this.onMouseDown(node._id)} cx={node._position.x} cy={node._position.y} r="13" stroke={node._color} stroke-width="5" fill="transparent" 
+                ></circle>
+            ))}
+            </svg>
                 { this.state.selectedEntity &&
                     <div>
                         Selected Entity:&nbsp;
@@ -95,7 +128,6 @@ class App extends Component {
 
                 <div>
                     <h1>Create Edge</h1>
-
                     <Dropdown
                         placeHolder='Select start Node ...'
                         label='Start Node'
