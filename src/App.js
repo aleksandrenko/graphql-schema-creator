@@ -9,6 +9,7 @@ import {DefaultButton, IconButton} from 'office-ui-fabric-react/lib/Button';
 import { Dropdown } from 'office-ui-fabric-react/lib/Dropdown';
 
 import EditEntity from './Components/EntityEdit';
+import GraphUI from './Components/GraphUI';
 
 import {initializeIcons} from '@uifabric/icons';
 
@@ -48,6 +49,8 @@ class App extends Component {
                 <br/>
                 <br/>
                 <br/>
+
+                <GraphUI store={store} />
 
                 <EditEntity entity={store.selected} />
 

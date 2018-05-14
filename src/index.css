@@ -15,3 +15,16 @@ body {
 .ms-Fabric {
   padding: 20px;
 }
+
+.graph-ui-svg {
+  background: #ebebeb;
+}
+
+.graph-ui-svg .node circle {
+  cursor: pointer;
+  stroke-width: 5px;
+}
+
+.graph-ui-svg .node text {
+  transform: translate(20px, 5px);
+}

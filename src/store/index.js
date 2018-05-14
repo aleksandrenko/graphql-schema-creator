@@ -59,6 +59,15 @@ const store = {
             || this.edges.find(edge => edge.id === id);
     },
 
+    changeEntityPosition({ id, position }) {
+      const entity = this.getById(id);
+
+      entity.position = {
+          x: position.x,
+          y: position.y
+      };
+    },
+
     populateFromLocalStorage(localStorageData) {
         localStorageData.nodes &&
         localStorageData.nodes.forEach(nodeData => {
