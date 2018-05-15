@@ -14,6 +14,13 @@ import getSvgLine from '../utils/getSvgLine';
  */
 const getIsSelected = (store, entity) => store.selected && store.selected.id === entity.id;
 
+const OPACITY = {
+    SELECTED: 1,
+    LEVEL_ONE: 0.95,
+    LEVEL_TWO: 0.6,
+    NOT_SELECTED: 0.1
+};
+
 /**
  *
  * @param store
@@ -22,7 +29,7 @@ const getIsSelected = (store, entity) => store.selected && store.selected.id ===
  */
 const getOpacity = (store, entity) => {
     if (!store.selected) {
-        return 1;
+        return OPACITY.SELECTED;
     }
 
     const isSelected = getIsSelected(store, entity);
@@ -30,23 +37,33 @@ const getOpacity = (store, entity) => {
     const isEdge = entity.type === 'edge';
 
     if (isNode) {
-        const connectedToSelectedEdge = entity.edges.some(edge => {
-            return getIsSelected(store, edge);
-        });
+        const connectedToSelectedEdge = entity.edges.some(edge =>  getIsSelected(store, edge));
         if (connectedToSelectedEdge) {
-            return 0.7;
+            return OPACITY.LEVEL_ONE;
+        }
+
+        const secondLevelSelected = entity.edges
+            .filter(edge => edge.endNode.id === entity.id)
+            .some(edge => getIsSelected(store, edge.startNode));
+
+        //if there is a edge pointing to the same node is second level so entity !== store.selected
+        if (secondLevelSelected && entity !== store.selected) {
+            return OPACITY.LEVEL_TWO;
         }
     }
 
     if (isEdge) {
         if ( getIsSelected(store, entity.startNode)) {
-            return 0.7;
+            return OPACITY.LEVEL_ONE;
+        }
+
+        const secondLevelSelected = entity.startNode.edges.some(edge => getIsSelected(store, edge.startNode));
+        if (secondLevelSelected) {
+            return OPACITY.LEVEL_TWO;
         }
     }
 
-    const opacity = isSelected ? 1 : 0.15;
-
-    return opacity;
+    return isSelected ? OPACITY.SELECTED : OPACITY.NOT_SELECTED;
 };
 
 /**
