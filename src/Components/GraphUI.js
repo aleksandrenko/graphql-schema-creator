@@ -6,6 +6,52 @@ import ContextMenu from './ContextMenu';
 import store from '../store/';
 import getSvgLine from '../utils/getSvgLine';
 
+/**
+ *
+ * @param store
+ * @param entity
+ * @returns {*|boolean}
+ */
+const getIsSelected = (store, entity) => store.selected && store.selected.id === entity.id;
+
+/**
+ *
+ * @param store
+ * @param entity
+ * @returns {number}
+ */
+const getOpacity = (store, entity) => {
+    if (!store.selected) {
+        return 1;
+    }
+
+    const isSelected = getIsSelected(store, entity);
+    const isNode = entity.type === 'node';
+    const isEdge = entity.type === 'edge';
+
+    if (isNode) {
+        const connectedToSelectedEdge = entity.edges.some(edge => {
+            return getIsSelected(store, edge);
+        });
+        if (connectedToSelectedEdge) {
+            return 0.7;
+        }
+    }
+
+    if (isEdge) {
+        if ( getIsSelected(store, entity.startNode)) {
+            return 0.7;
+        }
+    }
+
+    const opacity = isSelected ? 1 : 0.15;
+
+    return opacity;
+};
+
+/**
+ *
+ */
 @observer
 class GraphUI extends Component {
     constructor(props) {
@@ -85,6 +131,7 @@ class GraphUI extends Component {
                     <ContextMenu
                         position={this.state.contextPosition}
                         entity={this.state.entity}
+                        onClick={ () => { this.setState({ showContextMenu: false }); }}
                     />
                 }
 
@@ -112,21 +159,25 @@ class GraphUI extends Component {
                         </marker>
 
                         {
-                            store.edges.map(edge => (
-                                <marker
-                                    key={`end-arrow-${edge.id}`}
-                                    id={`end-arrow-${edge.id}`}
-                                    fill={edge.startNode.color}
-                                    viewBox="0 -5 10 10"
-                                    refX="20"
-                                    markerWidth="6"
-                                    markerHeight="6"
-                                    orient="auto"
-                                    opacity="1"
-                                >
-                                    <path d="M0,-5L10,0L0,5" />
-                                </marker>
-                            ))
+                            store.edges.map(edge => {
+                                const opacity = getOpacity(store, edge);
+
+                                return (
+                                    <marker
+                                        key={`end-arrow-${edge.id}`}
+                                        id={`end-arrow-${edge.id}`}
+                                        fill={edge.startNode.color}
+                                        viewBox="0 -5 10 10"
+                                        refX="20"
+                                        markerWidth="6"
+                                        markerHeight="6"
+                                        orient="auto"
+                                        opacity={opacity}
+                                    >
+                                        <path d="M0,-5L10,0L0,5" />
+                                    </marker>
+                                )
+                            })
                         };
                     </defs>
 
@@ -142,8 +193,7 @@ class GraphUI extends Component {
                         <g className="edges">
                             {
                                 store.edges.map(edge => {
-                                    const isSelected = store.selected && store.selected.id === edge.id;
-                                    const opacity = !store.selected ? 1 : (isSelected ? 1 : 0.5);
+                                    const opacity = getOpacity(store, edge);
 
                                     return (
                                         <g
@@ -177,8 +227,8 @@ class GraphUI extends Component {
                         <g className="nodes">
                         {
                             store.nodes.map(node => {
-                                const isSelected = store.selected && store.selected.id === node.id;
-                                const opacity = !store.selected ? 1 : (isSelected ? 1 : 0.5);
+                                const isSelected = getIsSelected(store, node);
+                                const opacity = getOpacity(store, node);
 
                                 return (
                                     <g

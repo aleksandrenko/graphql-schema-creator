@@ -5,8 +5,6 @@ import store from '../store/';
 
 import { observable } from 'mobx';
 
-const thr = (errorText) => { throw new Error(errorText) };
-
 /**
  *
  */
@@ -17,17 +15,17 @@ class Node {
     @observable position;
 
     constructor(options = {}) {
-        this.name = options.name || thr('Name is required for new Node creation.');
+        this.name = options.name || 'New Node';
         this.edgeIds = options.edgeIds || [];
         this.properties = options.properties || [];
         this.id = options.id || getUID();
         this.type = 'node';
         this.color = options.color || getColor();
-        this.position = options.position || [];
+        this.position = options.position || { x: 50, y: 50 };
     }
 
     get edges() {
-        return this.edgeIds.map(edgeId => store.getById(edgeId));
+        return this.edgeIds.map(edgeId => store.getById(edgeId)).filter(edge => !!edge);
     }
 
     addEdge(edgeId) {

@@ -19,12 +19,8 @@ const store = {
     },
 
     addNode(options = {}) {
-        const position = {
-            x: options.x,
-            y: options.y
-        };
-
         const newNode = new Node({...options, options});
+        this.selected = newNode;
         this.nodes.push(newNode);
     },
 

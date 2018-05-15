@@ -38,12 +38,6 @@ class EntityEdit extends Component {
 
                 <TextField label="Name" value={entity.name} onChanged={ (val) => entity.name = val } />
 
-                <IconButton
-                    iconProps={ { iconName: 'Delete' } }
-                    title='Delete'
-                    onClick={ () => { store.deleteEntity(entity); } }
-                />
-
                 <div>({entity.type})</div>
 
                 <DefaultButton primary={true} onClick={ this.onAddNewProperty }>Add property</DefaultButton>

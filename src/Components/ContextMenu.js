@@ -1,12 +1,19 @@
 import React, {Component} from 'react';
 import {Nav} from 'office-ui-fabric-react/lib/Nav';
 
+import store from '../store/';
+
 const LINKS = {
     createNode: () => ({
         name: 'Create Node',
         key: 'create_node',
         iconProps: {
             iconName: 'CircleAddition'
+        },
+        action: (props) => {
+            store.addNode({
+                position: props.position
+            });
         }
     }),
     deleteNode: (label = '') => ({
@@ -14,6 +21,9 @@ const LINKS = {
         key: 'delete_node',
         iconProps: {
             iconName: 'Delete'
+        },
+        action: (props) => {
+            store.deleteEntity(props.entity);
         }
     }),
     createEdge: (label = '') => ({
@@ -21,13 +31,17 @@ const LINKS = {
         key: 'edge',
         iconProps: {
             iconName: 'Redo'
-        }
+        },
+        action: (props) => {}
     }),
     deleteEdge: (label = '') => ({
         name: `Delete "${label}"`,
         key: 'delete_edge',
         iconProps: {
             iconName: 'Delete'
+        },
+        action: (props) => {
+            store.deleteEntity(props.entity);
         }
     })
 };
@@ -35,13 +49,8 @@ const LINKS = {
 class EntityEdit extends Component {
 
     onMenuClick = (e, item) => {
-        switch (item.key) {
-            case 'Oranges':
-                console.log('Oranges are $0.59 a pound.');
-                break;
-            default:
-                console.log('Context menu have unhandled click handler: ' + item.key);
-        }
+        item.action(this.props);
+        this.props.onClick(item);
     };
 
     render() {
@@ -78,6 +87,10 @@ class EntityEdit extends Component {
         )
     }
 }
+
+EntityEdit.defaultProps = {
+    onClick: () => {}
+};
 
 
 export default EntityEdit;
