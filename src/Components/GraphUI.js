@@ -1,31 +1,63 @@
 import React, {Component} from 'react';
 import {observer} from "mobx-react";
 
+import ContextMenu from './ContextMenu';
+
+import store from '../store/';
+import getSvgLine from '../utils/getSvgLine';
+
 @observer
 class GraphUI extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            position: {
+                x: 0,
+                y: 0
+            },
+            contextPosition: {
+                x: 0,
+                y: 0
+            },
+            showContextMenu: false,
+            entity: null
+        };
+    }
+
     onMouseDown = (e) => {
-        this.onMouseMove.clickTarget = e.target;
+        const target = e.target;
+        const uuid = target.getAttribute('uuid') || target.parentElement.getAttribute('uuid');
+
+        this.setState({
+            entity: store.getById(uuid),
+            showContextMenu: false,
+            position: {
+                x: e.offsetX,
+                y: e.offsetY
+            }
+        });
+
         this.svg.addEventListener('mousemove', this.onMouseMove);
     };
 
     onMouseUp = () => {
-        this.onMouseMove.clickTarget = null;
+        this.setState({
+            entity: null
+        });
+
         this.svg.removeEventListener('mousemove', this.onMouseMove);
     };
 
     onMouseMove = (e) => {
-        const target = this.onMouseMove.clickTarget;
-
-        const targetIsNode = target.parentElement.classList.contains('node');
-
-        if (targetIsNode) {
-            this.onNodeMove(e, target.parentElement.getAttribute('uuid'));
+        if (this.state.entity && this.state.entity.type === 'node') {
+            this.onNodeMove(e);
         }
     };
 
-    onNodeMove = (e, uuid) => {
+    onNodeMove = (e) => {
         this.props.store.changeEntityPosition({
-            id: uuid,
+            id: this.state.entity.id,
             position: {
                 x: e.offsetX,
                 y: e.offsetY
@@ -34,7 +66,14 @@ class GraphUI extends Component {
     };
 
     showContext = (e) => {
-        console.log('show context');
+        this.setState({
+            showContextMenu: true,
+            contextPosition: {
+                x: e.pageX,
+                y: e.pageY
+            }
+        });
+
         e.preventDefault();
     };
 
@@ -43,8 +82,16 @@ class GraphUI extends Component {
 
         return (
             <div className="graph-ui">
+
+                { this.state.showContextMenu &&
+                    <ContextMenu
+                        position={this.state.contextPosition}
+                        entity={this.state.entity}
+                    />
+                }
+
                 <svg
-                    className="graph-ui-svg"
+                    className="graph-editor"
                     height="100%"
                     width="100%"
                     ref={svg => this.svg = svg}
@@ -54,16 +101,22 @@ class GraphUI extends Component {
                     onContextMenu={this.showContext}
                 >
                     <defs>
-                        <marker
-                            id="mark-end-arrow"
-                            viewBox="0 -5 10 10"
-                            refX="7"
-                            markerWidth="6"
-                            markerHeight="6"
-                            orient="auto"
-                        >
-                            <path d="M0,-5L10,0L0,5" />
-                        </marker>
+                        {
+                            store.edges.map(edge => (
+                                <marker
+                                    id={`end-arrow-${edge.id}`}
+                                    fill={edge.startNode.color}
+                                    viewBox="0 -5 10 10"
+                                    refX="20"
+                                    markerWidth="6"
+                                    markerHeight="6"
+                                    orient="auto"
+                                    opacity="1"
+                                >
+                                    <path d="M0,-5L10,0L0,5" />
+                                </marker>
+                            ))
+                        };
                     </defs>
 
                     <g className="entities">
@@ -73,6 +126,35 @@ class GraphUI extends Component {
                                 d="M0,0L0,0"
                                 style={{"marker-end": "url(&quot;#mark-end-arrow&quot;);"}}
                             />
+                        </g>
+
+                        <g className="edges">
+                            {
+                                store.edges.map(edge => (
+                                    <g
+                                        className="edge"
+                                        id={edge.id}
+                                        key={edge.id}
+                                    >
+                                        <path
+                                            stroke={edge.startNode.color}
+                                            d={getSvgLine(edge)}
+                                            style={{"marker-end": `url(#end-arrow-${edge.id}`}}
+                                            stroke-opacity="1"
+                                        />
+                                        <text
+                                            className="path-text"
+                                            tabIndex="0"
+                                            x={edge.middlePointWithOffset[0]}
+                                            y={edge.middlePointWithOffset[1]}
+                                            fill={edge.startNode.color}
+                                            opacity="1"
+                                        >
+                                            {edge.name} ({edge.properties.length})
+                                        </text>
+                                    </g>
+                                ))
+                            }
                         </g>
 
                         <g className="nodes">
@@ -85,7 +167,7 @@ class GraphUI extends Component {
                                     uuid={node.id}
                                 >
                                     <circle
-                                        r="13"
+                                        r="12"
                                         stroke={node.color}
                                         fill="transparent"
                                     />
@@ -96,8 +178,6 @@ class GraphUI extends Component {
                             ))
                         }
                         </g>
-
-                        <g className="edges"></g>
                     </g>
                 </svg>
             </div>

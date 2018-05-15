@@ -7,7 +7,7 @@ const geometry = {
      * @param end
      * @returns {[]}
      */
-    middlePoint: (start, end) => [(start.x + end.x) / 2, (start.y + end.y) / 2],
+    middlePoint: (start, end) => [(start.position.x + end.position.x) / 2, (start.position.y + end.position.y) / 2],
 
     /**
      * @param start
@@ -31,7 +31,8 @@ const geometry = {
      * @param {boolean} rotateCCW
      * @returns {[x, y]}
      */
-    rotatePoint: (point, center, rotateCCW) => {
+    rotatePoint: (point, _center, rotateCCW) => {
+        const center = [_center.x, _center.y];
         // move the point to coordinate system where tne 'center' is the [0, 0] of the coordinate system
         const rotationCenter = [point.x - center[0], point.y - center[1]];
 

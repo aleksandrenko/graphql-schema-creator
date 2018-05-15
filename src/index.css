@@ -1,32 +1,19 @@
+@import "./styles/graph-editor.css";
+@import "./styles/context-menu.css";
+
 body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
 }
 
+body .app {
+  font-size: 12px;
+}
 
 .form {
   background: #fafafa;
   padding: 10px;
   margin: 20px;
   border: solid 1px #eee;
-}
-
-.ms-Fabric {
-  padding: 20px;
-}
-
-.graph-ui-svg {
-  background: #ebebeb;
-}
-
-.graph-ui-svg .node circle {
-  cursor: pointer;
-  stroke-width: 5px;
-}
-
-.graph-ui-svg .node text {
-  transform: translate(20px, 5px);
-  white-space: nowrap;
-  text-transform: capitalize;
 }

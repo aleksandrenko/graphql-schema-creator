@@ -1,0 +1,65 @@
+
+.graph-editor {
+    user-select: none;
+    background: #ebebeb;
+}
+
+.graph-editor .node circle {
+    transition: transform 1s;
+}
+
+.graph-editor .node.dragging circle {
+    cursor: move;
+}
+
+.graph-editor .node circle {
+    cursor: pointer;
+    fill: #ebebeb;
+    stroke-width: 5px;
+}
+
+.graph-editor .node text {
+    white-space: nowrap;
+    fill-opacity: 1;
+    text-transform: capitalize;
+    transform: translate(20px, 5px);
+}
+
+.graph-editor .node:focus {
+    outline-offset: 5px;
+}
+
+/* Edge styles */
+
+.graph-editor .edge text {
+    cursor: pointer;
+    text-transform: capitalize;
+}
+
+.graph-editor .edge text.dragging {
+    cursor: move;
+}
+
+.graph-editor .edge path {
+    fill: none;
+}
+
+.graph-editor .edge text:focus {
+    outline-offset: 5px;
+}
+
+.graph-editor path {
+    stroke-width: 2px;
+}
+
+.graph-editor path .path-text {
+
+}
+
+.graph-editor .dragLine {
+    stroke-dasharray: 2;
+}
+
+.graph-editor .dragLine.hidden {
+    display: none;
+}
