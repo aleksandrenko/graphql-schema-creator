@@ -28,9 +28,10 @@ class GraphUI extends Component {
     onMouseDown = (e) => {
         const target = e.target;
         const uuid = target.getAttribute('uuid') || target.parentElement.getAttribute('uuid');
+        const entity = store.getById(uuid) || null;
 
         this.setState({
-            entity: store.getById(uuid),
+            entity: entity,
             showContextMenu: false,
             position: {
                 x: e.offsetX,
@@ -38,14 +39,12 @@ class GraphUI extends Component {
             }
         });
 
+        store.selected = entity;
+
         this.svg.addEventListener('mousemove', this.onMouseMove);
     };
 
     onMouseUp = () => {
-        this.setState({
-            entity: null
-        });
-
         this.svg.removeEventListener('mousemove', this.onMouseMove);
     };
 
@@ -82,7 +81,6 @@ class GraphUI extends Component {
 
         return (
             <div className="graph-ui">
-
                 { this.state.showContextMenu &&
                     <ContextMenu
                         position={this.state.contextPosition}
@@ -135,12 +133,13 @@ class GraphUI extends Component {
                                         className="edge"
                                         id={edge.id}
                                         key={edge.id}
+                                        uuid={edge.id}
                                     >
                                         <path
                                             stroke={edge.startNode.color}
                                             d={getSvgLine(edge)}
                                             style={{"marker-end": `url(#end-arrow-${edge.id}`}}
-                                            stroke-opacity="1"
+                                            strokeOpacity="1"
                                         />
                                         <text
                                             className="path-text"
@@ -169,10 +168,11 @@ class GraphUI extends Component {
                                     <circle
                                         r="12"
                                         stroke={node.color}
-                                        fill="transparent"
+                                        fill={(store.selected && store.selected.id === node.id) ? node.color : '#ebebeb'}
+                                        tabindex="0"
                                     />
                                     <text fill={node.color}>
-                                            {node.name} ({node.properties.length})
+                                        {node.name} ({node.properties.length})
                                     </text>
                                 </g>
                             ))

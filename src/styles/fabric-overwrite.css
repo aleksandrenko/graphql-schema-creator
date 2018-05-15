@@ -1,0 +1,11 @@
+#context-menu .ms-Nav-navItems {
+    margin: 0;
+}
+
+#context-menu .ms-Nav-groupContent {
+    margin-bottom: 0;
+}
+
+#context-menu .ms-Icon-placeHolder {
+    width: 0;
+}

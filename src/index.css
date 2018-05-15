@@ -1,5 +1,6 @@
 @import "./styles/graph-editor.css";
 @import "./styles/context-menu.css";
+@import "./styles/fabric-overwrite.css";
 
 body {
   margin: 0;

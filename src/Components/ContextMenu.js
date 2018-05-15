@@ -1,5 +1,13 @@
 import React, {Component} from 'react';
-import { Nav } from 'office-ui-fabric-react/lib/Nav';
+import {Nav} from 'office-ui-fabric-react/lib/Nav';
+
+const LINKS = {
+    createNode: () => ({name: 'Create Node', key: 'create_node'}),
+    deleteNode: (label = '') => ({name: `Delete "${label}"`, key: 'delete_node'}),
+    createEdgeFrom: (label = '') => ({name: `Create Edge From "${label}"`, key: 'edge_from'}),
+    createEdgeTo: (label = '') => ({name: `Create Edge To "${label}"`, key: 'edge_to'}),
+    deleteEdge: (label = '') => ({name: `Delete "${label}"`, key: 'delete_edge'})
+};
 
 class EntityEdit extends Component {
 
@@ -14,29 +22,35 @@ class EntityEdit extends Component {
     };
 
     render() {
-        const { position, entity } = this.props;
+        const {position, entity} = this.props;
+        const isNode = entity && entity.type === 'node';
+        const isEdge = entity && entity.type === 'edge';
         const styles = {
             transform: `translate(${position.x}px, ${position.y}px)`
         };
+
+        const links = (
+            isNode && [
+                LINKS.deleteNode(entity.name),
+                LINKS.createEdgeFrom(entity.name),
+                LINKS.createEdgeTo(entity.name)
+            ] ||
+            isEdge && [
+                LINKS.deleteEdge(entity.name)
+            ] ||
+            [
+                LINKS.createNode()
+            ]
+        );
 
         return (
             <div
                 id="context-menu"
                 style={styles}
             >
-                { JSON.stringify(entity) }
-
                 <Nav
                     onLinkClick={this.onMenuClick}
-                    groups={ [{
-                        links: [
-                            { name: 'Create Node', key: 'create_node' },
-                            { name: 'Delete Node', key: 'delete_node' },
-                            { name: 'Create Edge From', key: 'edge_from' },
-                            { name: 'Create Edge To', key: 'edge_to' },
-                            { name: 'Delete Edge', key: 'delete_edge' }
-                        ]
-                    }] }
+                    groups={[{links}]}
                 />
             </div>
         )

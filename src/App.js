@@ -31,23 +31,6 @@ class App extends Component {
 
         return (
             <Fabric className="app">
-                { store.selected &&
-                    <div>
-                        Selected Entity:&nbsp;
-                        <b>
-                            { store.selected.name }
-                            ({ store.selected.type})
-                        </b>
-
-                        &nbsp;&nbsp;
-                        <button onClick={() => { store.selected = null }}>
-                            Deselect
-                        </button>
-                    </div>
-                }
-
-                <br/>
-
                 <GraphUI store={store} />
 
                 <EditEntity entity={store.selected} />
@@ -65,38 +48,6 @@ class App extends Component {
 
                 <br/>val: {this.state.inputValue}
                 <br/>
-
-                <ul>
-                    { store &&
-                        store.nodes.map(node => (
-                            <li key={node.id}>
-                                <input type="color" value={node.color} onChange={ (e) => { node.color = e.target.value; } } />
-
-                                <button onClick={ () => { store.selected = node; }}>
-                                    {node.name} (x: {node.position.x}/y: {node.position.y})
-                                </button>
-
-                                <IconButton
-                                    iconProps={ { iconName: 'Delete' } }
-                                    title='Delete'
-                                    onClick={ () => { store.deleteEntity(node); } }
-                                />
-
-                                <div>edges:
-                                {
-                                    node.edges
-                                        .filter(edge => !!edge)
-                                        .map(edge => (
-                                            <span key={edge.id}>{edge.name}</span>
-                                        ))
-                                }
-                                </div>
-                            </li>
-                        ))
-                    }
-                </ul>
-
-                <hr/>
 
                 <div>
                     <h1>Create Edge</h1>
