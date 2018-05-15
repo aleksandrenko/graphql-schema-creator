@@ -99,9 +99,22 @@ class GraphUI extends Component {
                     onContextMenu={this.showContext}
                 >
                     <defs>
+                        <marker
+                            id="mark-end-arrow"
+                            viewBox="0 -5 10 10"
+                            refX="20"
+                            markerWidth="6"
+                            markerHeight="6"
+                            orient="auto"
+                            opacity="1"
+                        >
+                            <path d="M0,-5L10,0L0,5" />
+                        </marker>
+
                         {
                             store.edges.map(edge => (
                                 <marker
+                                    key={`end-arrow-${edge.id}`}
                                     id={`end-arrow-${edge.id}`}
                                     fill={edge.startNode.color}
                                     viewBox="0 -5 10 10"
@@ -122,60 +135,74 @@ class GraphUI extends Component {
                             <path
                                 className="dragLine hidden"
                                 d="M0,0L0,0"
-                                style={{"marker-end": "url(&quot;#mark-end-arrow&quot;);"}}
+                                style={{"markerEnd": "url(#mark-end-arrow)"}}
                             />
                         </g>
 
                         <g className="edges">
                             {
-                                store.edges.map(edge => (
-                                    <g
-                                        className="edge"
-                                        id={edge.id}
-                                        key={edge.id}
-                                        uuid={edge.id}
-                                    >
-                                        <path
-                                            stroke={edge.startNode.color}
-                                            d={getSvgLine(edge)}
-                                            style={{"marker-end": `url(#end-arrow-${edge.id}`}}
-                                            strokeOpacity="1"
-                                        />
-                                        <text
-                                            className="path-text"
-                                            tabIndex="0"
-                                            x={edge.middlePointWithOffset[0]}
-                                            y={edge.middlePointWithOffset[1]}
-                                            fill={edge.startNode.color}
-                                            opacity="1"
+                                store.edges.map(edge => {
+                                    const isSelected = store.selected && store.selected.id === edge.id;
+                                    const opacity = !store.selected ? 1 : (isSelected ? 1 : 0.5);
+
+                                    return (
+                                        <g
+                                            className="edge"
+                                            id={edge.id}
+                                            key={edge.id}
+                                            uuid={edge.id}
                                         >
-                                            {edge.name} ({edge.properties.length})
-                                        </text>
-                                    </g>
-                                ))
+                                            <path
+                                                stroke={edge.startNode.color}
+                                                d={getSvgLine(edge)}
+                                                style={{"markerEnd": `url(#end-arrow-${edge.id})`}}
+                                                strokeOpacity={opacity}
+                                            />
+                                            <text
+                                                className="path-text"
+                                                tabIndex="0"
+                                                x={edge.middlePointWithOffset[0]}
+                                                y={edge.middlePointWithOffset[1]}
+                                                fill={edge.startNode.color}
+                                                opacity={opacity}
+                                            >
+                                                {edge.name} ({edge.properties.length})
+                                            </text>
+                                        </g>
+                                    )
+                                })
                             }
                         </g>
 
                         <g className="nodes">
                         {
-                            store.nodes.map(node => (
-                                <g
-                                    className="node"
-                                    transform={`translate(${node.position.x},${node.position.y})`}
-                                    key={node.id}
-                                    uuid={node.id}
-                                >
-                                    <circle
-                                        r="12"
-                                        stroke={node.color}
-                                        fill={(store.selected && store.selected.id === node.id) ? node.color : '#ebebeb'}
-                                        tabindex="0"
-                                    />
-                                    <text fill={node.color}>
-                                        {node.name} ({node.properties.length})
-                                    </text>
-                                </g>
-                            ))
+                            store.nodes.map(node => {
+                                const isSelected = store.selected && store.selected.id === node.id;
+                                const opacity = !store.selected ? 1 : (isSelected ? 1 : 0.5);
+
+                                return (
+                                    <g
+                                        className="node"
+                                        transform={`translate(${node.position.x},${node.position.y})`}
+                                        key={node.id}
+                                        uuid={node.id}
+                                    >
+                                        <circle
+                                            r="12"
+                                            stroke={node.color}
+                                            strokeOpacity={opacity}
+                                            fill={isSelected ? node.color : '#ebebeb'}
+                                            tabIndex="0"
+                                        />
+                                        <text
+                                            fill={node.color}
+                                            opacity={opacity}
+                                        >
+                                            {node.name} ({node.properties.length})
+                                        </text>
+                                    </g>
+                                )
+                            })
                         }
                         </g>
                     </g>

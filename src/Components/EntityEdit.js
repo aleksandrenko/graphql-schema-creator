@@ -31,7 +31,10 @@ class EntityEdit extends Component {
 
         return (entity &&
             <div className="form">
-                <input type="color" value={entity.color} onChange={ (e) => { entity.color = e.target.value; } } />
+                {
+                    entity.color &&
+                    <input type="color" value={entity.color} onChange={ (e) => { entity.color = e.target.value; } } />
+                }
 
                 <TextField label="Name" value={entity.name} onChanged={ (val) => entity.name = val } />
 

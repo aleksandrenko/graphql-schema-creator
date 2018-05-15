@@ -2,11 +2,34 @@ import React, {Component} from 'react';
 import {Nav} from 'office-ui-fabric-react/lib/Nav';
 
 const LINKS = {
-    createNode: () => ({name: 'Create Node', key: 'create_node'}),
-    deleteNode: (label = '') => ({name: `Delete "${label}"`, key: 'delete_node'}),
-    createEdgeFrom: (label = '') => ({name: `Create Edge From "${label}"`, key: 'edge_from'}),
-    createEdgeTo: (label = '') => ({name: `Create Edge To "${label}"`, key: 'edge_to'}),
-    deleteEdge: (label = '') => ({name: `Delete "${label}"`, key: 'delete_edge'})
+    createNode: () => ({
+        name: 'Create Node',
+        key: 'create_node',
+        iconProps: {
+            iconName: 'CircleAddition'
+        }
+    }),
+    deleteNode: (label = '') => ({
+        name: `Delete "${label}"`,
+        key: 'delete_node',
+        iconProps: {
+            iconName: 'Delete'
+        }
+    }),
+    createEdge: (label = '') => ({
+        name: `Create Edge From "${label}"`,
+        key: 'edge',
+        iconProps: {
+            iconName: 'Redo'
+        }
+    }),
+    deleteEdge: (label = '') => ({
+        name: `Delete "${label}"`,
+        key: 'delete_edge',
+        iconProps: {
+            iconName: 'Delete'
+        }
+    })
 };
 
 class EntityEdit extends Component {
@@ -32,8 +55,7 @@ class EntityEdit extends Component {
         const links = (
             isNode && [
                 LINKS.deleteNode(entity.name),
-                LINKS.createEdgeFrom(entity.name),
-                LINKS.createEdgeTo(entity.name)
+                LINKS.createEdge(entity.name)
             ] ||
             isEdge && [
                 LINKS.deleteEdge(entity.name)
