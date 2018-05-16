@@ -47,6 +47,10 @@ const store = {
 
     deleteEntity(entity) {
         if (entity.type === 'node') {
+            entity.edges.forEach(edge => {
+                this.edges.remove(edge);
+            });
+
             this.nodes.remove(entity);
         }
 
