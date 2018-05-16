@@ -22,6 +22,8 @@ const store = {
         const newNode = new Node({...options, options});
         this.selected = newNode;
         this.nodes.push(newNode);
+
+        return newNode;
     },
 
     addEdge({name, startNodeId, endNodeId, middlePointOffset}) {
@@ -39,6 +41,8 @@ const store = {
         endNode.addEdge(newEdge.id);
 
         this.edges.push(newEdge);
+
+        return newEdge;
     },
 
     deleteEntity(entity) {

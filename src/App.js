@@ -6,7 +6,7 @@ import {Panel, PanelType} from 'office-ui-fabric-react/lib/Panel';
 import Details from './Components/Details';
 
 import EditEntity from './Components/EntityEdit';
-import GraphUI from './Components/GraphUI';
+import Graph from './Components/GraphUI/';
 
 import {initializeIcons} from '@uifabric/icons';
 initializeIcons();
@@ -15,10 +15,6 @@ initializeIcons();
 class App extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            inputValue: ''
-        }
     }
 
     render() {
@@ -26,7 +22,7 @@ class App extends Component {
 
         return (
             <Fabric className="app">
-                <GraphUI store={store}/>
+                <Graph store={store}/>
                 <Panel
                     isBlocking={false}
                     isOpen={!!store.selected}

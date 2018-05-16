@@ -11,14 +11,6 @@
 }
 
 .graph-editor .node circle {
-    transition: transform 1s;
-}
-
-.graph-editor .node.dragging circle {
-    cursor: move;
-}
-
-.graph-editor .node circle {
     cursor: pointer;
     stroke-width: 5px;
     transition: all 0.2s;

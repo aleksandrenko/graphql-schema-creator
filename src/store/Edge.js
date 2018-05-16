@@ -15,7 +15,7 @@ class Edge {
     @observable middlePointOffset;
 
     constructor(options = {}) {
-        this.name = options.name || thr('Name is required for new Edge creation.');
+        this.name = options.name || "New edge";
         this.id = options.id || getUID();
         this.properties = options.properties || [];
         this.type = 'edge';

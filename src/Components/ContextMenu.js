@@ -28,7 +28,7 @@ const LINKS = {
     }),
     createEdge: (label = '') => ({
         name: `Create Edge From "${label}"`,
-        key: 'edge',
+        key: 'create_edge',
         iconProps: {
             iconName: 'Redo'
         },
@@ -50,7 +50,7 @@ class EntityEdit extends Component {
 
     onMenuClick = (e, item) => {
         item.action(this.props);
-        this.props.onClick(item);
+        this.props.onClick({e, item});
     };
 
     render() {

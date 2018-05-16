@@ -1,77 +1,22 @@
 import React, {Component} from 'react';
 import {observer} from "mobx-react";
 
-import ContextMenu from './ContextMenu';
+import ContextMenu from '../ContextMenu';
 
-import store from '../store/';
-import getSvgLine from '../utils/getSvgLine';
+import store from '../../store/index';
+import getSvgLine from '../../utils/getSvgLine';
+import getOpacity from './utils/getOpacity';
 
-const isNode = (entity) => entity && entity.type === 'node';
-const isEdge = (entity) => entity && entity.type === 'edge';
+import {isNode, isEdge, getIsSelected} from './utils/tools';
 
-/**
- *
- * @param store
- * @param entity
- * @returns {*|boolean}
- */
-const getIsSelected = (store, entity) => store.selected && store.selected.id === entity.id;
-
-const OPACITY = {
-    SELECTED: 1,
-    LEVEL_ONE: 0.95,
-    LEVEL_TWO: 0.6,
-    NOT_SELECTED: 0.1
+const entityFromEvent = (e, store) => {
+    const target = e.target;
+    const uuid = target.getAttribute('uuid') || target.parentElement.getAttribute('uuid');
+    return store.getById(uuid) || null;
 };
 
-/**
- *
- * @param store
- * @param entity
- * @returns {number}
- */
-const getOpacity = (store, entity) => {
-    if (!store.selected) {
-        return OPACITY.SELECTED;
-    }
-
-    const isSelected = getIsSelected(store, entity);
-
-    if (isNode(entity)) {
-        const connectedToSelectedEdge = entity.edges.some(edge =>  getIsSelected(store, edge));
-        if (connectedToSelectedEdge) {
-            return OPACITY.LEVEL_ONE;
-        }
-
-        const secondLevelSelected = entity.edges
-            .filter(edge => edge.endNode.id === entity.id)
-            .some(edge => getIsSelected(store, edge.startNode));
-
-        //if there is a edge pointing to the same node is second level so entity !== store.selected
-        if (secondLevelSelected && entity !== store.selected) {
-            return OPACITY.LEVEL_TWO;
-        }
-    }
-
-    if (isEdge(entity)) {
-        if ( getIsSelected(store, entity.startNode)) {
-            return OPACITY.LEVEL_ONE;
-        }
-
-        const secondLevelSelected = entity.startNode.edges.some(edge => getIsSelected(store, edge.startNode));
-        if (secondLevelSelected) {
-            return OPACITY.LEVEL_TWO;
-        }
-    }
-
-    return isSelected ? OPACITY.SELECTED : OPACITY.NOT_SELECTED;
-};
-
-/**
- *
- */
 @observer
-class GraphUI extends Component {
+class Index extends Component {
     constructor(props) {
         super(props);
 
@@ -84,19 +29,21 @@ class GraphUI extends Component {
                 x: 0,
                 y: 0
             },
+            edgeEndPoint: {
+                x: 0,
+                y: 0
+            },
             showContextMenu: false,
-            entity: null
+            createEdgeMode: false
         };
     }
 
     onMouseDown = (e) => {
-        const target = e.target;
-        const uuid = target.getAttribute('uuid') || target.parentElement.getAttribute('uuid');
-        const entity = store.getById(uuid) || null;
+        const entity = entityFromEvent(e, store);
 
         this.setState({
-            entity: entity,
             showContextMenu: false,
+            createEdgeMode: false,
             position: {
                 x: e.offsetX,
                 y: e.offsetY
@@ -112,18 +59,50 @@ class GraphUI extends Component {
         this.svg.removeEventListener('mousemove', this.onMouseMove);
     };
 
+    onEdgeDrawingMove = (e) => {
+        const edgeEndPoint = {
+            x: e.offsetX,
+            y: e.offsetY
+        };
+
+        this.setState({ edgeEndPoint });
+    };
+
+    onEdgeEndNodeClick = (e) => {
+        const endNode = entityFromEvent(e, store);
+        const startNode = store.selected;
+
+        if (isNode(endNode) && isNode(startNode)) {
+            const newEdge = store.addEdge({
+                startNodeId: startNode.id,
+                endNodeId: endNode.id
+            });
+
+            setTimeout(() => {
+                store.selected = newEdge;
+            }, 0);
+        }
+
+        this.svg.removeEventListener('mousemove', this.onEdgeDrawingMove);
+        this.svg.removeEventListener('mousedown', this.onEdgeEndNodeClick);
+    };
+
     onMouseMove = (e) => {
-        if (isNode(this.state.entity)) {
+        if (isNode(store.selected)) {
             this.onNodeMove(e);
         }
 
-        if (isEdge(this.state.entity)) {
+        if (isEdge(store.selected)) {
             this.onEdgeMove(e);
+        }
+
+        if (this.state.createEdgeMode) {
+            console.log(e.offsetX);
         }
     };
 
     onEdgeMove = (e) => {
-        const edge = this.state.entity;
+        const edge = store.selected;
 
         const xOffset = edge.middlePoint[0] - e.offsetX;
         const yOffset = edge.middlePoint[1] - e.offsetY;
@@ -133,7 +112,7 @@ class GraphUI extends Component {
 
     onNodeMove = (e) => {
         this.props.store.changeEntityPosition({
-            id: this.state.entity.id,
+            id: store.selected.id,
             position: {
                 x: e.offsetX,
                 y: e.offsetY
@@ -153,16 +132,72 @@ class GraphUI extends Component {
         e.preventDefault();
     };
 
+    onContextMenuClick = ({e, item}) => {
+        const entity = store.selected;
+        let stateModification = {
+            showContextMenu: false
+        };
+
+        if (item.key === 'create_edge' && isNode(entity)) {
+            stateModification.createEdgeMode = true;
+            stateModification.edgeEndPoint = {
+                x: e.pageX,
+                y: e.pageY
+            };
+
+            this.svg.addEventListener('mousemove', this.onEdgeDrawingMove);
+            this.svg.addEventListener('mousedown', this.onEdgeEndNodeClick);
+        }
+
+        this.setState(stateModification);
+    };
+
     render() {
         const store = this.props.store;
+        let newEdgeArrow = null;
+        let newEdgePath = null;
+
+        if (this.state.createEdgeMode && store.selected) {
+            const startNode = store.selected;
+            const endPoint = this.state.edgeEndPoint;
+            const startPoint = {
+                x: startNode.position.x,
+                y: startNode.position.y
+            };
+
+            newEdgeArrow = (
+                <marker
+                    id="mark-end-arrow"
+                    viewBox="0 -5 10 10"
+                    refX="9"
+                    markerWidth="6"
+                    markerHeight="6"
+                    orient="auto"
+                    opacity="1"
+                    fill={startNode.color}
+                >
+                    <path d="M0,-5L10,0L0,5" />
+                </marker>
+            );
+
+            newEdgePath = (
+                <path
+                    className="dragLine"
+                    d={`M${startPoint.x},${startPoint.y}L${endPoint.x},${endPoint.y}`}
+                    stroke={startNode.color}
+                    style={{"markerEnd": "url(#mark-end-arrow)"}}
+                    opacity="1"
+                />
+            )
+        }
 
         return (
             <div className="graph-ui">
                 { this.state.showContextMenu &&
                     <ContextMenu
                         position={this.state.contextPosition}
-                        entity={this.state.entity}
-                        onClick={ () => { this.setState({ showContextMenu: false }); }}
+                        entity={store.selected}
+                        onClick={ this.onContextMenuClick }
                     />
                 }
 
@@ -176,18 +211,9 @@ class GraphUI extends Component {
                     onMouseLeave={this.onMouseUp}
                     onContextMenu={this.showContext}
                 >
+
                     <defs>
-                        <marker
-                            id="mark-end-arrow"
-                            viewBox="0 -5 10 10"
-                            refX="20"
-                            markerWidth="6"
-                            markerHeight="6"
-                            orient="auto"
-                            opacity="1"
-                        >
-                            <path d="M0,-5L10,0L0,5" />
-                        </marker>
+                        { newEdgeArrow }
 
                         {
                             store.edges.map(edge => {
@@ -214,11 +240,7 @@ class GraphUI extends Component {
 
                     <g className="entities">
                         <g className="tempPaths">
-                            <path
-                                className="dragLine hidden"
-                                d="M0,0L0,0"
-                                style={{"markerEnd": "url(#mark-end-arrow)"}}
-                            />
+                            { newEdgePath }
                         </g>
 
                         <g className="edges">
@@ -293,4 +315,4 @@ class GraphUI extends Component {
     }
 }
 
-export default GraphUI;
+export default Index;
