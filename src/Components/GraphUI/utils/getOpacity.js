@@ -2,7 +2,7 @@
 const OPACITY = {
     SELECTED: 1,
     LEVEL_ONE: 0.95,
-    LEVEL_TWO: 0.6,
+    LEVEL_TWO: 0.4,
     NOT_SELECTED: 0.1
 };
 

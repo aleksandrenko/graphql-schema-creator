@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {observer} from 'mobx-react';
 
 import {Fabric} from 'office-ui-fabric-react/lib/Fabric';
-import {Panel, PanelType} from 'office-ui-fabric-react/lib/Panel';
 
 import EditEntity from './Components/EntityEdit';
 import Graph from './Components/GraphUI/';
@@ -17,16 +16,12 @@ class App extends Component {
 
         return (
             <Fabric className="app">
-                <Graph store={store}/>
-                <Panel
-                    isBlocking={false}
-                    isOpen={!!store.selected}
-                    onDismiss={() => { store.selected = null }}
-                    type={PanelType.medium}
-                    closeButtonAriaLabel='Close'
-                >
+                <div className="left">
+                    <Graph store={store} />
+                </div>
+                <div className="right">
                     <EditEntity entity={store.selected}/>
-                </Panel>
+                </div>
             </Fabric>
         );
     }
