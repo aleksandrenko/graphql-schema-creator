@@ -24,17 +24,16 @@ const geometry = {
     },
 
     /**
-     * @param point
+     * @param entity
      * @param center
      * @param {boolean} rotateCCW
      * @returns {[x, y]}
      */
-    rotatePoint: (point, _center, rotateCCW) => {
-        const center = [_center.x, _center.y];
+    rotatePoint: (entity, center, rotateCCW) => {
         // move the point to coordinate system where tne 'center' is the [0, 0] of the coordinate system
-        const rotationCenter = [point.x - center[0], point.y - center[1]];
+        const rotationCenter = [entity.position.x - center[0], entity.position.y - center[1]];
 
-        // rotate by 90deg. and return the point to the position
+        // rotate by 90deg. and return the entity to the position
         const rotatedLeft = [-rotationCenter[1] + center[0], rotationCenter[0] + center[1]];
         const rotatedRight = [rotationCenter[1] + center[0], -rotationCenter[0] + center[1]];
 

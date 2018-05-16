@@ -1,15 +1,16 @@
 import geometry from './geometry';
-import { line } from 'd3-shape';
+import d3 from 'd3';
 
 const getSvgLine = (edge) => {
-    const _line = line()
+    const pointingToTheSameNode = edge.startNodeId === edge.endNodeId;
+
+    const _line = d3.svg.line()
         .x(d => d[0])
-        .y(d => d[1]);
-        // .interpolate(edge.startNodeId === edge.endNodeId ? 'basis' : 'cardinal');
+        .y(d => d[1])
+        .interpolate(pointingToTheSameNode ? 'basis' : 'cardinal');
 
-    if (edge.startNodeId === edge.endNodeId) {
+    if (pointingToTheSameNode) {
         const node = edge.startNode;
-
         const rotatedLeft = geometry.quadWay(geometry.rotatePoint(node, edge.middlePointWithOffset, true), edge.middlePointWithOffset);
         const rotatedRight = geometry.quadWay(geometry.rotatePoint(node, edge.middlePointWithOffset, false), edge.middlePointWithOffset);
 
