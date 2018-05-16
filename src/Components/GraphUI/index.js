@@ -45,18 +45,32 @@ class Index extends Component {
             showContextMenu: false,
             createEdgeMode: false,
             position: {
-                x: e.offsetX,
-                y: e.offsetY
+                x: e.clientX,
+                y: e.clientY
             }
         });
 
         store.selected = entity;
 
-        this.svg.addEventListener('mousemove', this.onMouseMove);
+        if (isNode(store.selected)) {
+            this.svg.addEventListener('mousemove', this.onNodeMove);
+        }
+
+        if (isEdge(store.selected)) {
+            this.svg.addEventListener('mousemove', this.onEdgeMove);
+        }
+
+        if (e.target.nodeName === 'svg') {
+            this.svg.addEventListener('mousemove', this.onSvgDrag);
+        }
     };
 
     onMouseUp = () => {
-        this.svg.removeEventListener('mousemove', this.onMouseMove);
+        this.svg.removeEventListener('mousemove', this.onEdgeMove);
+        this.svg.removeEventListener('mousemove', this.onNodeMove);
+        this.svg.removeEventListener('mousemove', this.onSvgDrag);
+
+        this.onSvgDrag.position = null;
     };
 
     onEdgeDrawingMove = (e) => {
@@ -87,18 +101,25 @@ class Index extends Component {
         this.svg.removeEventListener('mousedown', this.onEdgeEndNodeClick);
     };
 
-    onMouseMove = (e) => {
-        if (isNode(store.selected)) {
-            this.onNodeMove(e);
-        }
+    onSvgDrag = (e) => {
+        const previousPosition = this.onSvgDrag.position || { x: e.offsetX, y: e.offsetY };
 
-        if (isEdge(store.selected)) {
-            this.onEdgeMove(e);
-        }
+        const delta = {
+            x: e.offsetX - previousPosition.x,
+            y: e.offsetY - previousPosition.y
+        };
 
-        if (this.state.createEdgeMode) {
-            console.log(e.offsetX);
-        }
+        store.nodes.forEach(node => {
+            node.position = {
+                x: node.position.x + delta.x,
+                y: node.position.y + delta.y
+            }
+        });
+
+        this.onSvgDrag.position = {
+            x: e.offsetX,
+            y: e.offsetY
+        };
     };
 
     onEdgeMove = (e) => {
@@ -225,7 +246,7 @@ class Index extends Component {
                                         id={`end-arrow-${edge.id}`}
                                         fill={edge.startNode.color}
                                         viewBox="0 -5 10 10"
-                                        refX="20"
+                                        refX="21"
                                         markerWidth="6"
                                         markerHeight="6"
                                         orient="auto"

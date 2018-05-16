@@ -3,7 +3,6 @@ import {observer} from 'mobx-react';
 
 import {Fabric} from 'office-ui-fabric-react/lib/Fabric';
 import {Panel, PanelType} from 'office-ui-fabric-react/lib/Panel';
-import Details from './Components/Details';
 
 import EditEntity from './Components/EntityEdit';
 import Graph from './Components/GraphUI/';
@@ -13,10 +12,6 @@ initializeIcons();
 
 @observer
 class App extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         const store = this.props.store;
 
@@ -26,14 +21,11 @@ class App extends Component {
                 <Panel
                     isBlocking={false}
                     isOpen={!!store.selected}
-                    onDismiss={() => {
-                        store.selected = null
-                    }}
+                    onDismiss={() => { store.selected = null }}
                     type={PanelType.medium}
                     closeButtonAriaLabel='Close'
                 >
                     <EditEntity entity={store.selected}/>
-                    <Details store={store} />
                 </Panel>
             </Fabric>
         );

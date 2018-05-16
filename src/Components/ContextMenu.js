@@ -63,8 +63,8 @@ class EntityEdit extends Component {
 
         const links = (
             isNode && [
-                LINKS.deleteNode(entity.name),
-                LINKS.createEdge(entity.name)
+                LINKS.createEdge(entity.name),
+                LINKS.deleteNode(entity.name)
             ] ||
             isEdge && [
                 LINKS.deleteEdge(entity.name)
