@@ -6,6 +6,9 @@ import ContextMenu from './ContextMenu';
 import store from '../store/';
 import getSvgLine from '../utils/getSvgLine';
 
+const isNode = (entity) => entity && entity.type === 'node';
+const isEdge = (entity) => entity && entity.type === 'edge';
+
 /**
  *
  * @param store
@@ -33,10 +36,8 @@ const getOpacity = (store, entity) => {
     }
 
     const isSelected = getIsSelected(store, entity);
-    const isNode = entity.type === 'node';
-    const isEdge = entity.type === 'edge';
 
-    if (isNode) {
+    if (isNode(entity)) {
         const connectedToSelectedEdge = entity.edges.some(edge =>  getIsSelected(store, edge));
         if (connectedToSelectedEdge) {
             return OPACITY.LEVEL_ONE;
@@ -52,7 +53,7 @@ const getOpacity = (store, entity) => {
         }
     }
 
-    if (isEdge) {
+    if (isEdge(entity)) {
         if ( getIsSelected(store, entity.startNode)) {
             return OPACITY.LEVEL_ONE;
         }
@@ -112,9 +113,22 @@ class GraphUI extends Component {
     };
 
     onMouseMove = (e) => {
-        if (this.state.entity && this.state.entity.type === 'node') {
+        if (isNode(this.state.entity)) {
             this.onNodeMove(e);
         }
+
+        if (isEdge(this.state.entity)) {
+            this.onEdgeMove(e);
+        }
+    };
+
+    onEdgeMove = (e) => {
+        const edge = this.state.entity;
+
+        const xOffset = edge.middlePoint[0] - e.offsetX;
+        const yOffset = edge.middlePoint[1] - e.offsetY;
+
+        edge.middlePointOffset = [xOffset, yOffset];
     };
 
     onNodeMove = (e) => {

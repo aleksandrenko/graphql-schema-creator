@@ -12,6 +12,7 @@ const thr = (errorText) => { throw new Error(errorText) };
 class Edge {
     @observable name;
     @observable properties;
+    @observable middlePointOffset;
 
     constructor(options = {}) {
         this.name = options.name || thr('Name is required for new Edge creation.');

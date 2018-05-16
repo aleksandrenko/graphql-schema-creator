@@ -24,11 +24,12 @@ const store = {
         this.nodes.push(newNode);
     },
 
-    addEdge({name, startNodeId, endNodeId}) {
+    addEdge({name, startNodeId, endNodeId, middlePointOffset}) {
         const newEdge = new Edge({
             name,
             startNodeId,
-            endNodeId
+            endNodeId,
+            middlePointOffset
         });
 
         const startNode = this.getById(startNodeId);
