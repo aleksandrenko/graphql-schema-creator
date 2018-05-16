@@ -33,6 +33,10 @@ class Index extends Component {
                 x: 0,
                 y: 0
             },
+            svgTempOffset: {
+                x: 0,
+                y: 0
+            },
             showContextMenu: false,
             createEdgeMode: false
         };
@@ -71,6 +75,25 @@ class Index extends Component {
         this.svg.removeEventListener('mousemove', this.onSvgDrag);
 
         this.onSvgDrag.position = null;
+        const svgTempOffset = this.state.svgTempOffset;
+
+        if (svgTempOffset.x) {
+            //move the temp svg move to node position
+            store.nodes.forEach(node => {
+                node.position = {
+                    x: node.position.x + svgTempOffset.x,
+                    y: node.position.y + svgTempOffset.y
+                }
+            });
+
+            //and clear the temp offset
+            this.setState({
+                svgTempOffset: {
+                    x: 0,
+                    y: 0
+                }
+            })
+        }
     };
 
     onEdgeDrawingMove = (e) => {
@@ -109,10 +132,10 @@ class Index extends Component {
             y: e.offsetY - previousPosition.y
         };
 
-        store.nodes.forEach(node => {
-            node.position = {
-                x: node.position.x + delta.x,
-                y: node.position.y + delta.y
+        this.setState({
+            svgTempOffset: {
+                x: this.state.svgTempOffset.x + delta.x,
+                y: this.state.svgTempOffset.y + delta.y
             }
         });
 
@@ -177,6 +200,10 @@ class Index extends Component {
         const store = this.props.store;
         let newEdgeArrow = null;
         let newEdgePath = null;
+        const svgTempOffset = this.state.svgTempOffset;
+        const svgStyles = {
+            transform: `translate(${svgTempOffset.x}px, ${svgTempOffset.y}px)`
+        };
 
         if (this.state.createEdgeMode && store.selected) {
             const startNode = store.selected;
@@ -259,7 +286,10 @@ class Index extends Component {
                         };
                     </defs>
 
-                    <g className="entities">
+                    <g
+                        className="entities"
+                        style={svgStyles}
+                    >
                         <g className="tempPaths">
                             { newEdgePath }
                         </g>
