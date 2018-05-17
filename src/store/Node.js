@@ -38,7 +38,9 @@ class Node {
 
     addProperty() {
         const newProperty = new Property();
-        this.properties.push(newProperty);
+        this.properties.unshift(newProperty);
+
+        return newProperty;
     }
 
 }

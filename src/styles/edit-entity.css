@@ -90,6 +90,10 @@
     border-bottom: solid 1px #ddd;
 }
 
+.edit-entity ul.properties-list > li:last-child {
+    border-bottom: solid 1px #ccc;
+}
+
 .edit-entity ul.properties-list > li.selected {
     background: #fafafa;
 }
@@ -104,6 +108,14 @@
     line-height: 32px;
     cursor: pointer;
     transition: background 0.2s;
+}
+
+.edit-entity .property-list-name-hint {
+    font-size: 80%;
+    color: #999;
+    display: inline-block;
+    padding-left: 5px;
+    line-height: 90%;
 }
 
 .edit-entity .property-list-delete-btn {

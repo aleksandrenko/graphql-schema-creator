@@ -20,6 +20,11 @@ class App extends Component {
                     <Graph store={store} />
                 </div>
                 <div className="right">
+                    {
+                        !store.selected &&
+                        <div className="select-hint">Select a node or an edge!</div>
+                    }
+
                     <EditEntity entity={store.selected}/>
                 </div>
             </Fabric>

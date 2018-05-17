@@ -25,6 +25,7 @@ class Property extends Component {
                         <TextField
                             value={prop.name}
                             onChanged={(val) => { prop.name = val; }}
+                            autoFocus={true}
                         />
                     </li>
                     <li>
