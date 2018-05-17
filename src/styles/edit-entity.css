@@ -1,0 +1,151 @@
+.edit-entity {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+.edit-entity .entity-name {
+    display: flex;
+    position: relative;
+    padding: 10px;
+    padding-left: 30px;
+
+    border-bottom: solid 1px #ddd;
+    background: #fafafa;
+    height: 53px;
+}
+
+.edit-entity .entity-name .entity-name-input {
+    width: 100%;
+}
+
+.edit-entity .entity-name .entity-name-input .ms-TextField-field {
+    padding-right: 60px !important;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.edit-entity .entity-name .entity-name-type {
+    position: absolute;
+    top: 17px;
+    right: 110px;
+    color: #ddd;
+}
+
+.edit-entity .entity-name .color-selector {
+    height: 32px;
+    width: 16px;
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.edit-entity .entity-name .color-selector input {
+    position: absolute;
+    top: -10px;
+    left: -20px;
+    height: 100px;
+    width: 100px;
+    cursor: pointer;
+}
+
+/** */
+
+.edit-entity .create-property-btn {
+    margin-left: 8px;
+}
+
+.edit-entity .create-property-btn .ms-Button-label {
+    margin: 0;
+}
+
+/** */
+
+.properties-wrapper {
+    flex: 1;
+    overflow: auto;
+}
+
+/** Properties list */
+
+.edit-entity .create-property button .ms-Button-flexContainer {
+    text-align: left;
+}
+
+.edit-entity .properties-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow: auto;
+    background: #eee;
+}
+
+.edit-entity ul.properties-list > li {
+    border-bottom: solid 1px #ddd;
+}
+
+.edit-entity ul.properties-list > li.selected {
+    background: #fafafa;
+}
+
+.edit-entity ul.properties-list > li .property-list-name:hover {
+    background: #fafafa;
+}
+
+.edit-entity .property-list-name {
+    position: relative;
+    padding-left: 10px;
+    line-height: 32px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.edit-entity .property-list-delete-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: none;
+    opacity: 0.3;
+    transition: opacity 0.2s;
+}
+
+.edit-entity .property-list-delete-btn:hover {
+    opacity: 1;
+}
+
+.edit-entity .properties-list li:hover .property-list-delete-btn {
+    display: block;
+}
+
+/** */
+.selected-property {
+    padding: 0 10px 10px 5px;
+}
+
+.selected-property ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.selected-property ul li {
+    display: flex;
+    align-content: center;
+    padding: 5px;
+}
+
+.selected-property ul li label {
+    width: 100px;
+    display: flex;
+    align-items: center;
+}
+
+.selected-property ul li .ms-Toggle {
+    margin-bottom: 0;
+}

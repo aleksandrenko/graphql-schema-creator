@@ -1,6 +1,11 @@
 @import "./styles/graph-editor.css";
 @import "./styles/context-menu.css";
 @import "./styles/fabric-overwrite.css";
+@import "./styles/edit-entity.css";
+
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
@@ -9,7 +14,6 @@ body {
 }
 
 body .app {
-  font-size: 12px;
   position: absolute;
   top: 0;
   bottom: 0;
@@ -17,6 +21,25 @@ body .app {
   right: 0;
   display: flex;
   flex-direction: row;
+  overflow: hidden;
+}
+
+body .app,
+input,
+button,
+label,
+.ms-Dropdown-title {
+  font-size: 12px !important;
+}
+
+input {
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+
+.ms-TextField-fieldGroup,
+.ms-Dropdown-title {
+  border-radius: 3px !important;
 }
 
 body .app .left {
@@ -25,15 +48,9 @@ body .app .left {
 }
 
 body .app .right {
-  width: 340px;
+  width: 300px;
   border-left: solid 1px #cdcdcd;
   box-shadow: inset 10px 0 20px rgba(0, 0, 0, 0.02), inset 1px 0 15px rgba(0, 0, 0, 0.05);
   background: #dedede;
-}
-
-.form {
-  background: #fafafa;
-  padding: 10px;
-  margin: 20px;
-  border: solid 1px #eee;
+  position: relative;
 }
