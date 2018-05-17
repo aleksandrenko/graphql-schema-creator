@@ -100,16 +100,21 @@
     background: #fafafa;
 }
 
-.edit-entity ul.properties-list > li .property-list-name:hover {
-    background: #fafafa;
-}
-
 .edit-entity .property-list-name {
     position: relative;
     padding-left: 10px;
     line-height: 32px;
     cursor: pointer;
     transition: background 0.2s;
+}
+
+.edit-entity ul.properties-list > li:not[disabled] .property-list-name:hover {
+    background: #fafafa;
+}
+
+.edit-entity ul.properties-list > li[disabled] .property-list-name {
+    opacity: 0.5;
+    cursor: default;
 }
 
 .edit-entity .property-list-name-hint {
