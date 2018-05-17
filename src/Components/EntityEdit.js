@@ -65,16 +65,16 @@ class EntityEdit extends Component {
             <div className="edit-entity">
 
                 <div className="entity-name">
+                    <span className="color-selector">
                     {
                         entity.color &&
-                        <span className="color-selector">
-                            <input
-                                type="color"
-                                value={entity.color}
-                                onChange={this.onColorChange}
-                            />
-                        </span>
+                        <input
+                            type="color"
+                            value={entity.color}
+                            onChange={this.onColorChange}
+                        />
                     }
+                    </span>
 
                     <TextField
                         className="entity-name-input"

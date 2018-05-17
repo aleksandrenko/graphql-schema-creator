@@ -25,7 +25,10 @@ class Edge {
     }
 
     addProperty() {
-        this.properties.push(new Property());
+        const newProperty = new Property();
+        this.properties.unshift(newProperty);
+
+        return newProperty;
     }
 
     deleteProperty(prop) {

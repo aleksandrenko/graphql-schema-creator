@@ -44,6 +44,8 @@
     top: 10px;
     border-radius: 3px;
     overflow: hidden;
+    background: #eee;
+    cursor: not-allowed;
 }
 
 .edit-entity .entity-name .color-selector input {
