@@ -7,6 +7,7 @@ import EditEntity from './Components/EntityEdit';
 import Graph from './Components/GraphUI/';
 
 import {initializeIcons} from '@uifabric/icons';
+import Index from "./Components/QueryCreator/";
 initializeIcons();
 
 @observer
@@ -16,6 +17,8 @@ class App extends Component {
 
         return (
             <Fabric className="app">
+                <Index store={store} />
+
                 <div className="left">
                     <Graph store={store} />
                 </div>

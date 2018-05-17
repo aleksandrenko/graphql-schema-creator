@@ -7,7 +7,8 @@ import store from '../../store/index';
 import getSvgLine from '../../utils/getSvgLine';
 import getOpacity from './utils/getOpacity';
 
-import {isNode, isEdge, getIsSelected} from './utils/tools';
+import {getIsSelected} from './utils/tools';
+import {isNode, isEdge} from '../../utils/entities';
 
 const entityFromEvent = (e, store) => {
     const target = e.target;
