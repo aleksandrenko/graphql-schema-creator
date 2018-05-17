@@ -108,7 +108,7 @@
     transition: background 0.2s;
 }
 
-.edit-entity ul.properties-list > li:not[disabled] .property-list-name:hover {
+.edit-entity ul.properties-list > li:not([disabled]) .property-list-name:hover {
     background: #fafafa;
 }
 
