@@ -28,6 +28,7 @@ body .app,
 input,
 button,
 label,
+.ms-Checkbox-text,
 .ms-Dropdown-title {
   font-size: 12px !important;
 }

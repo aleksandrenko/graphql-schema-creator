@@ -14,7 +14,6 @@
     padding: 10px;
     padding-left: 30px;
 
-    border-bottom: solid 1px #ddd;
     background: #fafafa;
     height: 53px;
 }
@@ -24,7 +23,7 @@
 }
 
 .edit-entity .entity-name .entity-name-input .ms-TextField-field {
-    padding-right: 60px !important;
+    padding-right: 50px !important;
     text-overflow: ellipsis;
     overflow: hidden;
 }
@@ -32,7 +31,7 @@
 .edit-entity .entity-name .entity-name-type {
     position: absolute;
     top: 17px;
-    right: 110px;
+    right: 120px;
     color: #ddd;
 }
 
@@ -61,6 +60,7 @@
 
 .edit-entity .create-property-btn {
     margin-left: 8px;
+    font-weight: normal;
 }
 
 .edit-entity .create-property-btn .ms-Button-label {
@@ -78,7 +78,13 @@
 
 .edit-entity .create-property button .ms-Button-flexContainer {
     text-align: left;
+
 }
+
+.ms-Button-textContainer {
+    white-space: nowrap;
+}
+
 
 .edit-entity .properties-list {
     list-style: none;
@@ -106,6 +112,15 @@
     line-height: 32px;
     cursor: pointer;
     transition: background 0.2s;
+}
+
+.edit-entity .property-list-name .arrow {
+    padding: 0;
+    margin: 0;
+    width: 10px;
+    margin-right: 13px;
+    margin-top: 13px;
+    zoom: 0.6;
 }
 
 .edit-entity ul.properties-list > li:not([disabled]) .property-list-name:hover {
@@ -167,4 +182,13 @@
 
 .selected-property ul li .ms-Toggle {
     margin-bottom: 0;
+}
+
+.properties-title {
+    padding: 2px 3px 3px;
+    font-size: 80%;
+    color: #999;
+    display: inline-block;
+    padding-left: 5px;
+    text-transform: uppercase;
 }

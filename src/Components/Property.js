@@ -63,7 +63,7 @@ class Property extends Component {
                     </li>
                     { hasLimits(prop.type) &&
                         <li>
-                            <label>Min Len.:</label>
+                            <label>Min:</label>
                             <TextField
                                 value={prop.limitMin}
                                 onChanged={(val) => { prop.limitMin = val; }}
@@ -72,7 +72,7 @@ class Property extends Component {
                     }
                     { hasLimits(prop.type) &&
                         <li>
-                            <label>Max Len.:</label>
+                            <label>Max:</label>
                             <TextField
                                 value={prop.limitMax}
                                 onChanged={(val) => { prop.limitMax = val; }}

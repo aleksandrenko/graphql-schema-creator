@@ -59,6 +59,7 @@ class EntityEdit extends Component {
 
     getPropLi = (prop) => {
         const selectedProperty = this.state.selectedProperty;
+        const isPropSelected = this.isSelected(prop);
 
         let hintInfo = [];
 
@@ -74,17 +75,28 @@ class EntityEdit extends Component {
             hintInfo.push('@');
         }
 
+
+
         return (
             <li
                 key={prop.id}
-                className={(this.isSelected(prop) ? "selected" : '')}
+                className={(isPropSelected ? "selected" : '')}
                 disabled={prop.isSystem}
             >
                 <div
                     className="property-list-name"
                     onClick={prop.isSystem ? null : this.onPropertySelection.bind(this, prop)}>
-                    {prop.name}
 
+
+                    {
+                        !prop.isSystem && (
+                            isPropSelected
+                                ? <IconButton className="arrow" iconProps={{iconName: 'ChevronUp'}} />
+                                : <IconButton className="arrow" iconProps={{iconName: 'ChevronDown'}} />
+                        )
+                    }
+
+                    {prop.name}
                     <span className="property-list-name-hint">{hintInfo}</span>
 
                     {
@@ -137,11 +149,12 @@ class EntityEdit extends Component {
                         onClick={ this.onAddNewProperty }
                         className="create-property-btn"
                     >
-                        Property
+                        Add Property
                     </DefaultButton>
                 </div>
 
                 <div className="properties-wrapper">
+                    <div className="properties-title">properties</div>
                     <ul className="properties-list">
                         {
                             /*Render first the system props*/
