@@ -57,6 +57,10 @@ const store = {
         if (entity.type === 'edge') {
             this.edges.remove(entity);
         }
+
+        if (this.selectedId === entity.id) {
+            this.selected = null;
+        }
     },
 
     getById(id) {
