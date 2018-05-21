@@ -98,8 +98,16 @@ group {
     padding-left: 20px;
 }
 
+group line {
+    cursor: pointer;
+}
+
+group line:hover {
+    background: #fafafa;
+}
+
 comment {
-    color: #999
+    color: #999;
 }
 
 root {
