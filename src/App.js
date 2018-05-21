@@ -6,6 +6,8 @@ import {Fabric} from 'office-ui-fabric-react/lib/Fabric';
 import EditEntity from './Components/EntityEdit';
 import Graph from './Components/GraphUI/';
 
+import QueryMaker from './Components/tmpQueryMaker';
+
 import {initializeIcons} from '@uifabric/icons';
 initializeIcons();
 
@@ -16,17 +18,19 @@ class App extends Component {
 
         return (
             <Fabric className="app">
-                <div className="left">
-                    <Graph store={store} />
-                </div>
-                <div className="right">
-                    {
-                        !store.selected &&
-                        <div className="select-hint">Select a node or an edge!</div>
-                    }
+                <QueryMaker />
 
-                    <EditEntity entity={store.selected}/>
-                </div>
+                {/*<div className="left">*/}
+                    {/*<Graph store={store} />*/}
+                {/*</div>*/}
+                {/*<div className="right">*/}
+                    {/*{*/}
+                        {/*!store.selected &&*/}
+                        {/*<div className="select-hint">Select a node or an edge!</div>*/}
+                    {/*}*/}
+
+                    {/*<EditEntity entity={store.selected}/>*/}
+                {/*</div>*/}
             </Fabric>
         );
     }
