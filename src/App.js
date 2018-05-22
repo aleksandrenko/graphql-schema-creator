@@ -18,19 +18,17 @@ class App extends Component {
 
         return (
             <Fabric className="app">
-                <QueryMaker />
+                <div className="left">
+                    <Graph store={store} />
+                </div>
+                <div className="right">
+                    {
+                        !store.selected &&
+                        <div className="select-hint">Select a node or an edge!</div>
+                    }
 
-                {/*<div className="left">*/}
-                    {/*<Graph store={store} />*/}
-                {/*</div>*/}
-                {/*<div className="right">*/}
-                    {/*{*/}
-                        {/*!store.selected &&*/}
-                        {/*<div className="select-hint">Select a node or an edge!</div>*/}
-                    {/*}*/}
-
-                    {/*<EditEntity entity={store.selected}/>*/}
-                {/*</div>*/}
+                    <EditEntity entity={store.selected}/>
+                </div>
             </Fabric>
         );
     }
