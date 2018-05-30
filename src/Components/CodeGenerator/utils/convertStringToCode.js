@@ -5,7 +5,7 @@ export default (string) => {
 
     const findAndReplace = [
         {
-            match: /(\w*):\s(\S*)\s/gm, //nodes: [Node]
+            match: /(.*):\s(\S*)\s/gm, //nodes: [Node]
             replacement: '<div class="line property">&nbsp;&nbsp;<span class="cm-property">$1</span>: <span class="cm-string">$2</span></div>'
         },
         {
