@@ -11,12 +11,12 @@ import systemProperties from "./systemProperties";
  */
 class Node {
     @observable properties;
-    @observable _name;
+    @observable name;
     @observable color;
     @observable position;
 
     constructor(options = {}) {
-        this._name = options.name || 'New_Node';
+        this.name = options.name || 'New_Node';
         this.edgeIds = options.edgeIds || [];
         this.properties = options.properties || [];
         this.id = options.id || getUID();
@@ -27,14 +27,6 @@ class Node {
         !options.id && (
             systemProperties.map(systemProp => this.properties.push(systemProp))
         )
-    }
-
-    set name(newName) {
-        this._name = newName.replace(' ', '_');
-    }
-
-    get name() {
-        return this._name;
     }
 
     get edges() {
