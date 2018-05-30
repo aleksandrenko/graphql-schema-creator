@@ -3,7 +3,7 @@ import getColor from "../utils/color";
 import Property from "./Property";
 import store from '../store/';
 
-import { observable } from 'mobx';
+import { observable, intercept } from 'mobx';
 import systemProperties from "./systemProperties";
 
 /**
@@ -26,7 +26,16 @@ class Node {
 
         !options.id && (
             systemProperties.map(systemProp => this.properties.push(systemProp))
-        )
+        );
+
+        intercept(this, 'name', change => {
+            if (change.newValue === '') {
+                return null;
+            }
+
+            change.newValue = change.newValue.replace(' ', '_');
+            return change;
+        });
     }
 
     get edges() {

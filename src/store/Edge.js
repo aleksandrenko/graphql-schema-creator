@@ -5,6 +5,7 @@ import systemProperties from "./systemProperties";
 
 import { observable } from 'mobx';
 import store from '../store/';
+import {intercept} from "mobx/lib/mobx";
 const thr = (errorText) => { throw new Error(errorText) };
 
 /**
@@ -26,7 +27,16 @@ class Edge {
 
         !options.id && (
             systemProperties.map(systemProp => this.properties.push(systemProp))
-        )
+        );
+
+        intercept(this, 'name', change => {
+            if (change.newValue === '') {
+                return null;
+            }
+
+            change.newValue = change.newValue.replace(' ', '_');
+            return change;
+        });
     }
 
     addProperty() {
