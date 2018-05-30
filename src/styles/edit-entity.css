@@ -106,6 +106,12 @@
     background: #fafafa;
 }
 
+.edit-entity .properties-list .ms-TextField,
+.edit-entity .properties-list .ms-Toggle,
+.edit-entity .properties-list .ms-Dropdown-container {
+    flex: 1;
+}
+
 .edit-entity .property-list-name {
     position: relative;
     padding-left: 10px;

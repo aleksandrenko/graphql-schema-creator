@@ -6,7 +6,7 @@ import { observable } from 'mobx';
  *
  */
 class Property {
-    @observable name;
+    @observable _name;
     @observable type;
     @observable defaultValue;
     @observable limitMin;
@@ -18,7 +18,7 @@ class Property {
 
     constructor(options = {}) {
         this.id = options.id || getUID();
-        this.name = options.name || 'New Property';
+        this._name = options.name || 'New_Property';
         this.type = (options.type || '');
         this.defaultValue = options.defaultValue || '';
         this.limitMin = options.limitMin || '';
@@ -28,6 +28,15 @@ class Property {
         this.isSystem = options.isSystem || false;
         this.description = options.description || '';
     }
+
+    set name(newName) {
+        this._name = newName.replace(' ', '_');
+    }
+
+    get name() {
+        return this._name;
+    }
+
 }
 
 export default Property;

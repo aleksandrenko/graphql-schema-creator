@@ -29,9 +29,11 @@ const getNodeQueries = (store) => {
     const nodes = store.nodes;
 
     return nodes.map(node => {
+        const name = node.name.toCamelCase();
+
         return `
-            ${node.name}(id: ID!): ${node.name.toCamelCase()} 
-            ${node.name}s: [${node.name.toCamelCase()}]
+            ${name}(id: ID!): ${name} 
+            ${name}s: [${name}]
         `;
     }).join('\n');
 };
@@ -41,10 +43,12 @@ const getNodeMutations = (store) => {
 
     //Add flags to generate or ignore CRUD for created nodes
     return nodes.map(node => {
+        const name = node.name.toCamelCase();
+
         return `
-            create${node.name.toCamelCase()}(user: ${node.name.toCamelCase()}Input): ${node.name.toCamelCase()} 
-            update${node.name.toCamelCase()}(id: ID!, user: ${node.name.toCamelCase()}Input): ${node.name.toCamelCase()} 
-            delete${node.name.toCamelCase()}(id: ID!): ${node.name.toCamelCase()} 
+            create${name}(user: ${name}Input): ${name} 
+            update${name}(id: ID!, user: ${name}Input): ${name} 
+            delete${name}(id: ID!): ${name} 
         `;
     }).join('\n');
 };
