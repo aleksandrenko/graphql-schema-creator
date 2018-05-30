@@ -1,0 +1,97 @@
+.code-generator {
+    font-family: Consolas, monaco, monospace;
+    position: fixed;
+    top: 10px;
+    bottom: 10px;
+    right: 10px;
+    left: 10px;
+    background: #fff;
+    padding: 20px 20px 20px 0;
+    z-index: 1000;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    overflow: auto;
+}
+
+.code-generator .line {
+    line-height: 1.1rem;
+    transition: background 0.2s;
+    position: relative;
+    padding-left: 50px;
+    counter-increment: line;
+}
+
+.code-generator .line::before {
+    content: counter(line);
+    text-align: right;
+    display: block;
+    position: absolute;
+    left: 0;
+    width: 30px;
+    padding-right: 6px;
+    color: #aaa;
+    border-right: solid 1px #ccc;
+}
+
+.code-generator .line:hover {
+    background: #f1f1f1;
+}
+
+/* generated code styles */
+
+.cm-comment {
+    color: #999
+}
+
+.cm-punctuation {
+    color: #888
+}
+
+.cm-keyword {
+    color: #B11A04
+}
+
+.cm-def {
+    color: #D2054E
+}
+
+.cm-property {
+    color: #1F61A0
+}
+
+.cm-qualifier {
+    color: #1C92A9
+}
+
+.cm-attribute {
+    color: #8B2BB9
+}
+
+.cm-number {
+    color: #2882F9
+}
+
+.cm-string {
+    color: #D64292
+}
+
+.cm-builtin {
+    color: #D47509
+}
+
+.cm-string-2 {
+    color: #0B7FC7
+}
+
+.cm-variable {
+    color: #397D13
+}
+
+.cm-meta {
+    color: #B33086
+}
+
+.cm-atom {
+    color: #CA9800
+}
