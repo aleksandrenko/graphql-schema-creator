@@ -36,7 +36,6 @@ class Property {
     get name() {
         return this._name;
     }
-
 }
 
 export default Property;

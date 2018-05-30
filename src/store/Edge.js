@@ -11,12 +11,12 @@ const thr = (errorText) => { throw new Error(errorText) };
  *
  */
 class Edge {
-    @observable name;
+    @observable _name;
     @observable properties;
     @observable middlePointOffset;
 
     constructor(options = {}) {
-        this.name = options.name || "New edge";
+        this._name = options.name || "New_edge";
         this.id = options.id || getUID();
         this.properties = options.properties || [];
         this.type = 'edge';
@@ -27,6 +27,14 @@ class Edge {
         !options.id && (
             systemProperties.map(systemProp => this.properties.push(systemProp))
         )
+    }
+
+    set name(newName) {
+        this._name = newName.replace(' ', '_');
+    }
+
+    get name() {
+        return this._name;
     }
 
     addProperty() {
