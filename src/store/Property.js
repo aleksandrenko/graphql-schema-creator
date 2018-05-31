@@ -19,7 +19,7 @@ class Property {
 
     constructor(options = {}) {
         this.id = options.id || getUID();
-        this.name = options.name || 'New_Property';
+        this.name = options.name || ('Prop_' + this.id);
         this.type = (options.type || '');
         this.defaultValue = options.defaultValue || '';
         this.limitMin = options.limitMin || '';
@@ -34,7 +34,7 @@ class Property {
                 return null;
             }
 
-            change.newValue = change.newValue.replace(' ', '_');
+            change.newValue = change.newValue.replace(' ', '_').toCamelCase();
             return change;
         });
     }

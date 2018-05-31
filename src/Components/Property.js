@@ -6,9 +6,7 @@ import { Dropdown } from 'office-ui-fabric-react/lib/Dropdown';
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle';
 import { observer } from "mobx-react";
 
-const TYPES = ['', 'String', `ID`, 'Int', 'Float', 'Boolean', 'Password', 'Email', 'URL', 'Datetime', 'LatLng'];
-const typesWithLimits = ['string', 'int', 'float', 'password', 'email', 'url'];
-
+import { TYPES, typesWithLimits } from '../enums/propertyTypes';
 const hasLimits = (type) => typesWithLimits.includes(type.toLowerCase());
 
 @observer
@@ -38,6 +36,7 @@ class Property extends Component {
                                     text: type
                                 }))
                             }
+                            selectedKey={prop.type}
                             onChanged={(option) => { prop.type = option.key; }}
                         />
                     </li>

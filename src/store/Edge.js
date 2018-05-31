@@ -17,8 +17,8 @@ class Edge {
     @observable middlePointOffset;
 
     constructor(options = {}) {
-        this.name = options.name || "New_edge";
         this.id = options.id || getUID();
+        this.name = options.name || ('Edge_' + this.id);
         this.properties = options.properties || [];
         this.type = 'edge';
         this.middlePointOffset = options.middlePointOffset || [0, 0];
@@ -34,7 +34,7 @@ class Edge {
                 return null;
             }
 
-            change.newValue = change.newValue.replace(' ', '_');
+            change.newValue = change.newValue.replace(' ', '_').toCamelCase();
             return change;
         });
     }

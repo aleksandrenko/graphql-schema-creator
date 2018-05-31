@@ -1,14 +1,19 @@
 import getProperties from "./getProperties";
+import getConnections from './getConnections';
 
 const getNodeTypes = (store) => {
     const nodes = store.nodes;
 
     return nodes.map(node => {
         const name = node.name.toCamelCase();
+        const connections = getConnections(node);
+
+        //ships: ShipConnection
 
         const nodeSpec = `
             type ${name} implements Node {
               ${getProperties(node)}
+              ${connections.connections}
             }
         `;
 
@@ -21,6 +26,7 @@ const getNodeTypes = (store) => {
             # ${name}
             ${nodeSpec}
             ${nodeInputSpec}
+            ${connections.types}
         `;
     }).join('\n');
 };

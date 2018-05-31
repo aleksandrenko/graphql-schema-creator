@@ -16,10 +16,10 @@ class Node {
     @observable position;
 
     constructor(options = {}) {
-        this.name = options.name || 'New_Node';
+        this.id = options.id || getUID();
+        this.name = options.name || ('Node_' + this.id);
         this.edgeIds = options.edgeIds || [];
         this.properties = options.properties || [];
-        this.id = options.id || getUID();
         this.type = 'node';
         this.color = options.color || getColor();
         this.position = options.position || { x: 50, y: 50 };
@@ -33,7 +33,7 @@ class Node {
                 return null;
             }
 
-            change.newValue = change.newValue.replace(' ', '_');
+            change.newValue = change.newValue.replace(' ', '_').toCamelCase();
             return change;
         });
     }
