@@ -43,7 +43,7 @@ class Node {
     }
 
     addEdge(edgeId) {
-        this.edgeIds.push(edgeId);
+        !this.edgeIds.includes(edgeId) && this.edgeIds.push(edgeId);
     }
 
     deleteProperty(prop) {

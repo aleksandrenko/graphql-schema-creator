@@ -55,7 +55,9 @@ const store = {
         }
 
         if (entity.type === 'edge') {
-            this.edges.remove(entity);
+            if (!this.edges.remove(entity)) {
+                console.warn('Removing edge fails');
+            };
         }
 
         if (this.selectedId === entity.id) {

@@ -11,22 +11,28 @@ class CodeGenerator extends Component {
 
     render() {
         const store = this.props.store;
-        console.log('store', store);
-        const nodes = store.nodes;
-        console.log('nodes', nodes);
-
         const schemaString = getSchema(store);
+        let executableSchema;
+        let error;
 
-        console.log('generated schema string', schemaString);
         //Parse it to test for errors
-        const executableSchema = makeExecutableSchema({
-            typeDefs: schemaString,
-            resolvers: {},
-        });
-        console.log(printSchema(executableSchema));
+        try {
+            executableSchema = makeExecutableSchema({
+                typeDefs: schemaString,
+                resolvers: {},
+            });
+            console.log('executableSchema', executableSchema);
+        } catch(err) {
+            error = 'Invalid schema' + err.message;
+            console.error(err);
+        }
 
         return (
             <div className="code-generator">
+                {
+                    error &&
+                    <div className="code-generation-error">{ error }</div>
+                }
                 { convertStringToCode(schemaString) }
             </div>
         );
@@ -34,3 +40,17 @@ class CodeGenerator extends Component {
 }
 
 export default CodeGenerator;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
