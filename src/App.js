@@ -7,6 +7,7 @@ import EditEntity from './Components/EntityEdit';
 import Graph from './Components/GraphUI/';
 
 import CodeGenerator from './Components/CodeGenerator';
+import SchemaPreview from './Components/SchemaPreview';
 
 import {initializeIcons} from '@uifabric/icons';
 initializeIcons();
@@ -24,6 +25,8 @@ class App extends Component {
                     - generate
                 */}
                 {/*<CodeGenerator store={store} />*/}
+
+                <SchemaPreview store={store} />
 
                 <div className="left">
                     <Graph store={store} />

@@ -152,13 +152,6 @@ class EntityEdit extends Component {
                     </DefaultButton>
                 </div>
 
-                <div className="queryEntries-wrapper">
-                    <div className="wrapper-title">queries and mutations config</div>
-                    <ul className="properties-list">
-                        <QueryConfig />
-                    </ul>
-                </div>
-
                 <div className="properties-wrapper">
                     <div className="wrapper-title">properties</div>
                     <ul className="properties-list">
@@ -175,6 +168,13 @@ class EntityEdit extends Component {
                                 .filter(props => !props.isSystem)
                                 .map(this.getPropLi)
                         }
+                    </ul>
+                </div>
+
+                <div className="queryEntries-wrapper">
+                    <div className="wrapper-title">queries and mutations config</div>
+                    <ul className="properties-list">
+                        <QueryConfig />
                     </ul>
                 </div>
             </div>

@@ -12,6 +12,14 @@ const _TYPES = {
     'LatLng': 'String'
 };
 
+
+export const convertUIType = (uiType) => {
+    const definedTypeKey = Object.keys(_TYPES).find(type => type.toLowerCase() === uiType.toLowerCase());
+    return definedTypeKey
+        ? ALL_TYPES[definedTypeKey]
+        : 'String';
+};
+
 export const ALL_TYPES = _TYPES;
 export const TYPES = Object.keys(_TYPES);
 export const typesWithLimits = ['string', 'int', 'float', 'password', 'email', 'url'];
