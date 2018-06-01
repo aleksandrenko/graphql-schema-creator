@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import styles from './styles.css';
 
 import { makeExecutableSchema } from 'graphql-tools';
@@ -11,15 +11,18 @@ class CodeGenerator extends Component {
 
     render() {
         const store = this.props.store;
-        const schemaString = getSchema(store);
+        const generatedSchema = getSchema(store);
+        const schemaString = generatedSchema.schema;
         let executableSchema;
         let error;
+
+        console.log('generatedSchema.resolvers', generatedSchema.resolvers);
 
         //Parse it to test for errors
         try {
             executableSchema = makeExecutableSchema({
                 typeDefs: schemaString,
-                resolvers: {},
+                resolvers: generatedSchema.resolvers
             });
             console.log('executableSchema', executableSchema);
         } catch(err) {
@@ -28,13 +31,15 @@ class CodeGenerator extends Component {
         }
 
         return (
-            <div className="code-generator">
-                {
-                    error &&
-                    <div className="code-generation-error">{ error }</div>
-                }
-                { convertStringToCode(schemaString) }
-            </div>
+            <Fragment>
+                <div className="code-generator">
+                    {
+                        error &&
+                        <div className="code-generation-error">{ error }</div>
+                    }
+                    { convertStringToCode(schemaString) }
+                </div>
+            </Fragment>
         );
     }
 }

@@ -166,6 +166,7 @@
 /** */
 .selected-property {
     padding: 0 10px 10px 5px;
+    display: flex;
 }
 
 .selected-property ul {
@@ -190,7 +191,7 @@
     margin-bottom: 0;
 }
 
-.properties-title {
+.wrapper-title {
     padding: 2px 3px 3px;
     font-size: 80%;
     color: #999;

@@ -4,7 +4,10 @@ import getNodes from './getNodes';
 export default (store) => {
     const nodes = getNodes(store);
 
-    return (!store.nodes.length)
+    const resolvers = nodes.resolvers;
+    console.log(resolvers, resolvers);
+
+    const schema = (!store.nodes.length)
         ? `
             #
             # No entities to generated scheme for
@@ -37,4 +40,9 @@ export default (store) => {
               mutation: Mutation
             }
         `;
+
+    return {
+        schema,
+        resolvers
+    }
 }

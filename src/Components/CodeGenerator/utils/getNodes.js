@@ -1,6 +1,20 @@
 import getProperties from "./getProperties";
 import getConnections from './getConnections';
 
+const getNodeResolvers = (store) => {
+    const nodes = store.nodes;
+
+    return nodes.reduce((acc, node) => {
+        const name = node.name.toCamelCase();
+
+        acc[name] = (obj, args, context, info) => {
+            return {};
+        };
+
+        return acc;
+    }, {});
+};
+
 const getNodeTypes = (store) => {
     const nodes = store.nodes;
 
@@ -63,5 +77,6 @@ const getNodeMutations = (store) => {
 export default (store) => ({
     types: getNodeTypes(store),
     queries: getNodeQueries(store),
-    mutations: getNodeMutations(store)
+    mutations: getNodeMutations(store),
+    resolvers: getNodeResolvers(store)
 });

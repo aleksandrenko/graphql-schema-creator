@@ -18,8 +18,12 @@ class App extends Component {
 
         return (
             <Fabric className="app">
-
-                <CodeGenerator store={store} />
+                {/*
+                    Not Ready, need to:
+                    - add attributes generations
+                    - generate
+                */}
+                {/*<CodeGenerator store={store} />*/}
 
                 <div className="left">
                     <Graph store={store} />

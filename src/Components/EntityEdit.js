@@ -6,6 +6,8 @@ import {DefaultButton, IconButton} from 'office-ui-fabric-react/lib/Button';
 import Property from "./Property";
 import {observer} from 'mobx-react';
 
+import QueryConfig from './QueryConfig';
+
 import store from '../store/';
 
 @observer
@@ -75,8 +77,6 @@ class EntityEdit extends Component {
             hintInfo.push('@');
         }
 
-
-
         return (
             <li
                 key={prop.id}
@@ -86,7 +86,6 @@ class EntityEdit extends Component {
                 <div
                     className="property-list-name"
                     onClick={prop.isSystem ? null : this.onPropertySelection.bind(this, prop)}>
-
 
                     {
                         !prop.isSystem && (
@@ -153,8 +152,15 @@ class EntityEdit extends Component {
                     </DefaultButton>
                 </div>
 
+                <div className="queryEntries-wrapper">
+                    <div className="wrapper-title">queries and mutations config</div>
+                    <ul className="properties-list">
+                        <QueryConfig />
+                    </ul>
+                </div>
+
                 <div className="properties-wrapper">
-                    <div className="properties-title">properties</div>
+                    <div className="wrapper-title">properties</div>
                     <ul className="properties-list">
                         {
                             /*Render first the system props*/
